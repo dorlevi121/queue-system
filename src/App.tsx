@@ -1,0 +1,16 @@
+import React from 'react';
+import MainUser from './module/business/core/main-user.user';
+import Routing from './models/routes/app.routing';
+import { BrowserRouter } from 'react-router-dom';
+
+function App() {
+
+  return (
+    <BrowserRouter>
+      <Routing />
+      <MainUser />
+    </BrowserRouter>
+  );
+}
+
+export default App;

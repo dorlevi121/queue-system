@@ -1,0 +1,75 @@
+@import "../../../../models/style/main.scss";
+
+.Home {
+  & .Chart {
+    width: 85vw;
+    padding-top: 40px;
+    background: linear-gradient(
+      to right top,
+      #7467ef,
+      #7467ef,
+      #7467ef,
+      #7467ef,
+      #7467ef
+    );
+    margin-right: auto;
+
+    @include respond(phone) {
+      width: 100vw;
+    }
+
+    & p {
+      text-align: right;
+      color: $white;
+      margin: 0;
+      margin-right: 70px;
+      font-size: $medium-size;
+    }
+
+    & .Graph {
+      width: 80vw;
+      margin: auto;
+      margin-top: 10px;
+      @include respond(phone) {
+        width: 90vw;
+      }
+    }
+
+    & .TextBox {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+      position: relative;
+      top: 20px;
+
+      @include respond(phone) {
+        flex-direction: column;
+        align-items: center;
+        top: 0px;
+        margin-top: 20px;
+
+        & div {
+            margin-top: 10px;
+        }
+      }
+
+      & .Text {
+        margin-right: 10px;
+
+        & .Title {
+          color: $text-hint;
+        }
+
+        & .Content {
+          color: $purple;
+        }
+      }
+
+      & .Icon {
+        margin-right: 10px;
+        color: #7467ef;
+        opacity: 0.6;
+      }
+    }
+  }
+}
