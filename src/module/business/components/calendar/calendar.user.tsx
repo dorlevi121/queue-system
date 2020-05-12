@@ -1,15 +1,14 @@
-import React from 'react'
-import CalendarUserStyle from './calendar.module.scss'
+import React, { Component } from 'react'
+import './calendar.scss'
 
 
-const CalendarUser = () => {
-
-    return (
-        <div >
-
-        </div>
-    )
+export default class CalendarUser extends Component {
+    render() {
+        return (
+            <div>
+                
+            </div>
+        )
+    }
 }
-
-export default CalendarUser;
 
