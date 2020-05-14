@@ -9,3 +9,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
 }
+
+::selection {
+  background-color: #7467ef;
+  color: #fafafa; 
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(52, 49, 76, 0.38); 
+  
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #222A45; 
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

@@ -1,12 +1,12 @@
 import React from 'react'
 import UserRouting from '../routing/routes.user';
-import MenuUser from '../components/menu/menu-user.user';
+import MenuUser from '../components/menu/menu-user.business';
 
-const MainUser = () => {
+const MainUser = () => {    
     return (
         <React.Fragment>
             <MenuUser />
-            <UserRouting />
+            <UserRouting />  
         </React.Fragment>
     )
 }

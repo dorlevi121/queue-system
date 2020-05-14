@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import chartStyle from './chart-home.module.scss';
 import { Line } from 'react-chartjs-2';
+
 
 const ChartHome = () => {
 
