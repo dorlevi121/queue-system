@@ -6,8 +6,9 @@
   position: fixed;
   display: block;
   background-color: $background-menu;
-  transition: transform 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   z-index: 1;
+  
   @include respond(phone) {
     width: 90vw;
   }
@@ -79,6 +80,10 @@
     & .Current {
       border-right: 5px solid $orange;
       background: rgba($color: $orange, $alpha: 0.01);
+    }
+
+    & .Dropdown {
+      transition: height .5s ease-in-out;
     }
   }
 }

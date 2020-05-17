@@ -6,9 +6,11 @@ import MenuUser from './module/business/components/menu/menu-user.business';
 
 function App() {
 
+  const isSignIn: boolean = true;
+
   return (
     <BrowserRouter>
-      <MenuUser />
+      {isSignIn && <MenuUser /> }
       <Routing />
     </BrowserRouter>
   );

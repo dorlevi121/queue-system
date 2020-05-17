@@ -28,7 +28,7 @@ const NewQueue: React.FC<OwnProps> = (props) => {
         const newEvent: Event = {
             employeeId: 2,
             start: moment("2020-05-15 09:45").format("YYYY-MM-DD HH:mm"),
-            end: moment("2020-05-15 10:00").format("YYYY-MM-DD HH:mm"),
+            end: moment("2020-05-15 10:30").format("YYYY-MM-DD HH:mm"),
             id: 5,
             title: form.title,
             userId: form.phone

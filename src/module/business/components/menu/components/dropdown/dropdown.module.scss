@@ -13,7 +13,6 @@
     color: $white;
     animation: fadeIn 0.2s linear;
     animation-fill-mode: both;
-    transition: all 0.3s ease-in-out;
 
     &:hover {
       background: rgba($color: $orange, $alpha: 0.1);
@@ -30,7 +29,7 @@
 // Set delay per List Item
 @for $i from 1 through 2 {
     .Item:nth-child(#{$i}) {
-      animation-delay: .08s * $i;
+      animation-delay: .05s * $i;
     }
   }
 

@@ -1,11 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import CalendarStyle from './calendar.module.scss';
 import moment from 'moment';
 import { cloneDeep } from 'lodash';
 import * as helper from './components/helper';
 import { Event } from '../../../../models/system/event';
 import Button from '../../../../models/ui/button/button';
-import Modal from '../../../../models/ui/modal/modal';
 import NewQueue from './components/add-new-queue/add-new-queue.calendar';
 
 const CalendarUser = () => {
@@ -16,6 +15,7 @@ const CalendarUser = () => {
     const [NewEvent, setNewEvent] = useState<{ date: string, hour: string }>({ date: "", hour: "" });
 
     const events: { [id: number]: { [id: string]: Event }[] } = helper.events;
+    const eventsWeek: { [id: string]: Event }[] = events[CurWeek]; // all the events of week i
 
     const addNewEvent = (e: Event) => {
         const friday: { [id: string]: Event } = {};
@@ -23,8 +23,7 @@ const CalendarUser = () => {
         eventsWeek[5] = friday;
     }
 
-    const onSlotClick = (hour: string, date: string, event: Event) => {
-        console.log(hour, date, event);
+    const onSlotClick = (hour: string, date: string) => {
         setOpenModal(true);
         setNewEvent({ date: date, hour: hour });
         // Duration time of event - minutes
@@ -32,15 +31,22 @@ const CalendarUser = () => {
         // const sMin = (moment(s).hour() * 60) + moment(s).minute();
     }
 
+    const onEventClick = (hour: string, date: string, event: Event) => {
+        console.log(hour, date, event);
+        setOpenModal(true);
+        setNewEvent({ date: date, hour: hour });
+    }
+
+
 
     const allDaysWeek = helper.getWeekDaysByWeekNumber(CurWeek);
 
     const isEvents: Event[] = []; // Array of events or false
-    const eventsWeek: { [id: string]: Event }[] = events[CurWeek]; // all the events of week i
     const slots: JSX.Element[] = []; // Hold the table
     for (let i = StartHour; i < EndHour; i++) {
         for (let j = 0; j < 4; j++) {
             const hour = moment(i + ":" + j * 15, "HH:mm").format("HH:mm");
+
             for (let i = 0; i < 6; i++) { // i represent a day
                 if (!eventsWeek[i]) continue; //O(1)
                 if (eventsWeek[i][hour]) { //O(1)
@@ -58,12 +64,17 @@ const CalendarUser = () => {
                     {
                         allDaysWeek.map((day: any, i: number) => {
                             const e = cloneDeep(isEvents[i]);
-                            return (
-                                <td key={i * 10} className={isEvents[i] ? CalendarStyle.Slot + " " + CalendarStyle.Event : CalendarStyle.Slot}
-                                    onClick={() => onSlotClick(hour, day, e)}>
-                                    {isEvents[i] && !isEvents[i].description ? isEvents[i].title : ""}
-                                </td>
-                            )
+                            if (isEvents[i]) { //If The is a event
+                                return ( 
+                                    <td key={i * 10} className={CalendarStyle.Slot + " " + CalendarStyle.Event}
+                                        onClick={() => onEventClick(hour, day, e)}>
+                                        {isEvents[i].title}
+                                    </td>
+                                );
+                            }
+                            return ( //If The is not event
+                                <td key={i * 10} className={CalendarStyle.Slot} onClick={() => onSlotClick(hour, day)}></td>
+                            );
                         })
                     }
                 </tr>

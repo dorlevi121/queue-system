@@ -1,0 +1,16 @@
+@import '../../../../../models/style/main.scss';
+
+.Register {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 85vw;
+    & input {
+        margin: auto;
+    }
+
+    & button {
+        width: 100px;
+        margin: auto;
+    }
+}

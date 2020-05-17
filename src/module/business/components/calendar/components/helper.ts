@@ -6,15 +6,14 @@ export const eventFormat = "YYYY-MM-DD HH:mm";
 export const hebDays = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
 
 
-// Get week number 
-// Return all the dates of week
+// Get week number and return all the days of week
 export const getWeekDaysByWeekNumber = (weeknumber?: number) => {
-    var date = moment().isoWeek(weeknumber || 1).startOf("week"), weeklength = 6, result = [];
+    var date = moment().isoWeek(weeknumber || 1).startOf("week"), weeklength = 6, days = [];
     while (weeklength--) {
-        result.push(date.format(dateformat));
+        days.push(date.format(dateformat));
         date.add(1, "day")
     }
-    return result;
+    return days;
 }
 
 export const monthHebToEng = (month: string) => {
@@ -80,13 +79,12 @@ export const monthNumberToHeb = (month: number): string => {
 // (0 - Sunday... 2 - thursday). Every day its a dictionary of events such that the key is the start hour and the value is the event.
 export const events: { [id: number]: { [id: string]: Event }[] } = {}
 
-
 events[20] = new Array(7)
 events[21] = new Array(7)
 events[22] = new Array(7)
 events[23] = new Array(7)
 
-const sunday: { [id: string]: Event } = {}; // All the events in sunday
+const sunday: { [id: string]: Event } = {}; // All the events in sunday, week 20.
 const monday: { [id: string]: Event } = {};
 const wensday: { [id: string]: Event } = {};
 
@@ -131,7 +129,7 @@ events[20][1] = monday;
 events[20][3] = wensday;
 
 events[21] = new Array(7);
-const sundayWeek21: { [id: string]: Event } = {}; // All the events in sunday
+const sundayWeek21: { [id: string]: Event } = {}; // All the events in sunday week 21
 
 sundayWeek21['08:45'] = {
     id: 4,
