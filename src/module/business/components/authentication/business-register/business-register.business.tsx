@@ -34,7 +34,7 @@ const BusinessRegister: React.FC <Props> = (props) => {
 
     }
 
-    console.log(props.loading);
+    console.log(props.error);
     
     return (
         <div className={BusinessRegisterStyle.Register}>

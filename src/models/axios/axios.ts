@@ -1,5 +1,6 @@
 import axios from 'axios';
 
 export const instace = axios.create({
-    baseURL: 'http://locahost:8080/'
+    baseURL: 'http://localhost:8080/',
+    headers: "Access-Control-Allow-Origin"
 });
