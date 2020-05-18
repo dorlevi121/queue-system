@@ -20,7 +20,8 @@ const BusinessRegister: React.FC <Props> = (props) => {
         name: '',
         phone: '',
         email: '',
-        password: ''
+        password: '',
+        isAdmin: true
     });
 
     const onChange = (e: any, name: string) => {
@@ -34,7 +35,7 @@ const BusinessRegister: React.FC <Props> = (props) => {
 
     }
 
-    console.log(props.error);
+    console.log(props.error.message);
     
     return (
         <div className={BusinessRegisterStyle.Register}>
