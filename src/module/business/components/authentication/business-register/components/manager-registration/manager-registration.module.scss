@@ -1,0 +1,106 @@
+@import "../../../../../../../models/style/main.scss";
+
+.Header {
+    text-align: center;
+    & .Title {
+      color: $purple-register;
+      margin: 0;
+      font-size: $big-size;
+    }
+
+    & .SubTitle {
+      color: $text-hint;
+      margin: 0;
+      font-size: $small-size;
+    }
+  }
+
+   .Body {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+
+    & .Field {
+      width: 40%;
+
+      & label {
+        color: $text-body;
+        text-align: right !important;
+        font-size: 0.9rem;
+        font-weight: 200;
+        padding-bottom: 7px;
+        padding-top: 12px;
+        display: inline-block;
+      }
+
+      & input, & textArea{
+        outline: none;
+        display: block;
+        width: 100%;
+        margin: 0 0 20px;
+        padding: 10px 15px;
+        border: 1px solid #d9d9d9;
+        border-radius: 3px;
+        color: #837e7e;
+        font-family: inherit;
+        box-sizing: border-box;
+        font-size: 0.8rem;
+        font-weight: 400;
+        transition: all 0.3s linear 0s;
+        resize: vertical;
+        &:focus {
+          color: $text-body;
+          border: 1px solid $purple-register;
+        }
+      }
+
+      & .Error {
+        position: absolute;
+        border-radius: 3px;
+        box-shadow: 0 0 0 transparent;
+        margin-top: -100px;
+        padding: 0 10px;
+        height: 30px;
+        display: block;
+        color: #ffffff;
+        background: $error;
+        border: 0;
+        line-height: 39px;
+        white-space: nowrap;
+        animation: error .2s ease-in-out;
+
+        // &::before {
+        //   width: 0;
+        //   height: 0;
+        //   left: 0px;
+        //   top: 30px;
+        //   content: "";
+        //   position: absolute;
+        //   border-left: 6px solid transparent;
+        //   border-top: 8px solid #e62163;
+        //   border-right: 6px solid transparent;
+        // }
+
+        & i {
+          margin: 5px 5px 5px 0;
+          font-size: $small-size;
+          position: relative;
+          bottom: 5px;
+        }
+      }
+    }
+  }
+  
+   .Buttons {
+    text-align: left;
+    margin-left: 30px;
+    margin-top: 20px;
+  }
+
+
+
+@keyframes error {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
