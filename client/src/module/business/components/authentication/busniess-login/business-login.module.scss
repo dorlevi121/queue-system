@@ -1,0 +1,27 @@
+@import "../../../../../models/style/main.scss";
+
+.Button {
+  text-align: center;
+  margin-top: 20px;
+  animation: fade .5s ease-in-out;
+
+  & a {
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+    width: 20%;
+    text-decoration: none;
+    color: $text-body;
+    transition: all .4s ease-in-out; 
+    &:hover {
+      color: $purple-register;
+    }
+  }
+}
+
+.Form {
+    height: 40vh !important;
+    @include respond(phone) {
+      height: 60vh !important;
+    }
+}

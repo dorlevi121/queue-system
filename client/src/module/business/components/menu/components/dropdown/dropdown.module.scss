@@ -1,0 +1,48 @@
+@import "../../../../../../models/style/main.scss";
+
+.Items {
+  margin: 0;
+  margin-top: 10px;
+  margin-right: 30px;
+
+  & .Item {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    padding: 15px;
+    color: $white;
+    animation: fadeIn 0.2s linear;
+    animation-fill-mode: both;
+
+    &:hover {
+      background: rgba($color: $orange, $alpha: 0.1);
+      border-radius: 5px;
+    }
+  }
+
+  & .Current {
+    background: rgba($color: $orange, $alpha: 0.1);
+    border-radius: 5px;
+  }
+}
+
+// Set delay per List Item
+@for $i from 1 through 2 {
+    .Item:nth-child(#{$i}) {
+      animation-delay: .05s * $i;
+    }
+  }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    top: -100px;
+  }
+  75% {
+    opacity: 0.5;
+    top: 0px;
+  }
+  100% {
+    opacity: 1;
+  }
+}

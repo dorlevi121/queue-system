@@ -1,0 +1,10 @@
+@import "../../../../../../../models/style/main.scss";
+
+.Body {
+    @include flexWarp;
+    margin-top: 50px;
+}
+
+.Button {
+    text-align: center;
+}
