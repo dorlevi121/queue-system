@@ -9,32 +9,28 @@ import Options from '../../../../../models/ui/options/options';
 import { BusinesHours } from '../../../../../models/system/busines-hours';
 import { ArrowNext } from '../../../../../assets/icons/icons';
 import Button from '../../../../../models/ui/button/button';
+import { connect } from 'react-redux';
+import { getLoading, getError, getHours, getBusinessDetails } from '../../../../../store/business/details/details.selectors';
+import { BusinessDetails } from '../../../../../models/system/business-details';
+import { postBuisnessHours } from '../../../../../store/business/details/details.actions';
 
-const OpeningHours = () => {
+interface StateProps {
+    loading: boolean;
+    error: string;
+    hours: BusinesHours;
+    businesDetails: BusinessDetails | null
+}
+
+interface DispatchProps {
+    postBuisnessHours: typeof postBuisnessHours;
+}
+
+type Props = DispatchProps & StateProps;
+const OpeningHours: React.FC<Props> = (props) => {
     const [IsMobile, setIsMobile] = useState<any>(false);
-    const [Hours, setHours] = useState<BusinesHours>({
-        "sunday": [
-            { start: "09:00", end: "18:00" }
-        ],
-        "monday": [
-        ],
-        "tuesday": [
-            //{ start: "10:00", end: "17:00" }
-        ],
-        "wednesday": [
-            //{ start: "09:00", end: "20:00" }
-        ],
-        "thursday": [
-            //{ start: "12:00", end: "24:00" }
-        ],
-        "friday": [
-            // { start: "08:00", end: "18:00" }
-        ],
-        "saturday": [
-            //{ start: "12:00", end: "14:00" }
-        ]
-    })
+    const [Hours, setHours] = useState<BusinesHours>(props.hours)
     const [CurDay, setCurDay] = useState<string>('sunday');
+
     // Component did mount
     useEffect(() => {
         const resize = () => {
@@ -75,8 +71,12 @@ const OpeningHours = () => {
         });
     }
 
-    let hebDays: string[] = IsMobile ? days.shortenedHebDays : days.FullHebDays;
+    const updateHours = () => {
+        props.postBuisnessHours(Hours)
+    }
 
+    let hebDays: string[] = IsMobile ? days.shortenedHebDays : days.FullHebDays;
+    
     return (
         <React.Fragment>
             <SettingsHeader title="שעות פתיחה" sunTitle="כאן תוכל לערוך את ימי ושעות פתיחת העסק שלך" />
@@ -86,7 +86,7 @@ const OpeningHours = () => {
                 <div className={HoursStyle.Body}>
                     <div className={HoursStyle.Days}>
                         {hebDays.map((d: string, i: number) =>
-                            <p className={HoursStyle.Day} >{d}</p>
+                            <p key={d} className={HoursStyle.Day} >{d}</p>
                         )}
                     </div>
 
@@ -99,7 +99,7 @@ const OpeningHours = () => {
                             const endHours = Hours[curEnglishDay].length ?
                                 hours.hours.slice(hours.hours.indexOf(Hours[curEnglishDay][0].start)) : hours.hours;
                             return (
-                                <div className={HoursStyle.DayContent} onClick={() => setCurDay(curEnglishDay)}>
+                                <div key={d} className={HoursStyle.DayContent} onClick={() => setCurDay(curEnglishDay)}>
                                     <p className={HoursStyle.Day} >{d}</p>
 
                                     <SwitchButton state={isAvailable} onChange={onClickAvailable} />
@@ -116,7 +116,7 @@ const OpeningHours = () => {
                 </div>
 
                 <div className={HoursStyle.Button}>
-                    <Button color="purple">שמירה שינויים <ArrowNext /></Button>
+                    <Button onClick={() => updateHours()} color="purple">שמירה שינויים <ArrowNext /></Button>
                 </div>
             </div>
         </React.Fragment>
@@ -124,4 +124,15 @@ const OpeningHours = () => {
 }
 
 
-export default OpeningHours;
+const mapStateToProps = (state: any) => ({
+    loading: getLoading(state),
+    error: getError(state),
+    hours: getHours(state),
+    businesDetails: getBusinessDetails(state)
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+    postBuisnessHours: (hours: BusinesHours) => dispatch(postBuisnessHours(hours))
+});
+
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(OpeningHours);

@@ -6,6 +6,8 @@ const Service = require("../../../models/service.model");
 
 
 router.get("/", isAuth("client"), async (req, res, next) => {
+  console.log('in');
+  
   try {
     const business = await Business(req.mongo).findOne();
     const services = await Service(req.mongo).find();

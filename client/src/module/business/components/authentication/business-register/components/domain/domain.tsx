@@ -35,10 +35,10 @@ const Domain: React.FC<Props> = (props) => {
                 required: true,
                 minLen: 2,
                 isEnglish: true
-            } 
+            }
         }
-    }); 
-    const [error, setError] = useState<string>("");
+    });
+    const [Error, setError] = useState<string>("");
 
     const inputChangedHandler = (e: any, inputIdentifier: any) => {
         const ans = inputChanged(Form, e, inputIdentifier);
@@ -48,7 +48,7 @@ const Domain: React.FC<Props> = (props) => {
 
         if (!ans.formIsValid) {
             const index = Object.keys(ans.updatedForm).
-                filter(it => ans.updatedForm[it].error && ans.updatedForm[it].touched).pop();                
+                filter(it => ans.updatedForm[it].error && ans.updatedForm[it].touched).pop();
             !index ? setError("") : setError(ans.updatedForm[index].error)
         }
     };
@@ -63,11 +63,11 @@ const Domain: React.FC<Props> = (props) => {
     // Checks the information in the server
     const onClickNext = () => {
         //props.step('increment');
-        if (!error && !props.error) {
-            setError("");
-            props.setDomain(Form.domain.value);
-            nextPage = true;
-        }
+        if (Error) return;
+        setError("");
+        props.setDomain(Form.domain.value);
+        nextPage = true;
+
 
     };
 
@@ -76,7 +76,7 @@ const Domain: React.FC<Props> = (props) => {
     return (
         <React.Fragment>
             <AuthenticationHeadrer title={language.domainHeaderTitle[1]} subTitle={language.domainHeaderSubTitle[1]}
-                error={error ? error : props.error} />
+                error={Error ? Error : props.error} />
 
             <div className={DomainStyle.Body}>
                 {formElementsArray.map((formElement) => (

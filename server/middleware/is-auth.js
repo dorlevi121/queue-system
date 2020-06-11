@@ -4,7 +4,7 @@ const { error401auth, error404 } = require("../utils/error/dbErrorHandler");
 
 // const Client = require("../models/client.model");
 
-module.exports = (kind, mongoose = null) => {
+module.exports = (kind, mongoose = null) => {  
   return async (req, res, next) => {
     if (kind === "client" && !req.get("token")) {
       req.guest = true;
@@ -19,13 +19,14 @@ module.exports = (kind, mongoose = null) => {
     error401auth(token);
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
+      console.log(decodedToken);
+      
       error404(decodedToken);
       switch (kind) {
         case "employee":
           req.employee = await Employee(req.mongo).findById(
             decodedToken.employeeId);
-
+            
           error404(req.employee);
           break;
         case "client":

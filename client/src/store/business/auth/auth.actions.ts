@@ -59,8 +59,6 @@ export const loginEmployee = (form: { phone: string; password: string }) => {
       .then((res) => {
         const token = res.data.token;
         const domain = res.data.domain;
-        console.log(token, domain);
-
         localStorage.setItem("token", token);
         localStorage.setItem("domain", domain);
       })
@@ -83,8 +81,11 @@ export const signInCheck = () => {
   if (!token || !domain) {
     return { type: AuthActionsEnum.SIGN_IN_CHECK, ans: false, isAdmin: false };
   }
+
   return (dispatch: any, getState: any) => {
-    API.get(domain)
+    dispatch({ type: AuthActionsEnum.START_AUTH });
+
+    API.get('business')
       .then((res) => {
         const businessDeatails = res.data.business;
         const employee = res.data.employee;
@@ -101,7 +102,7 @@ export const signInCheck = () => {
         });
         dispatch({
           type: DetailsActionsEnum.GET_DETAILS,
-          deatils: businessDeatails,
+          details: businessDeatails,
         });
         return;
       })

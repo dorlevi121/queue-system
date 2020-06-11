@@ -11,8 +11,6 @@ const SwitchButton: React.FC<OwnProps> = (props) => {
 
     const Switch = () => {
         setState(!State);
-        console.log(!State);
-        
         props.onChange('available', !State)
     }
 

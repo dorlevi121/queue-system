@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SerivcesSettingsStyle from './services.module.scss';
 import SettingsHeader from '../../shared/header/settings-header.shared';
 import { Service } from '../../../../../models/system/service';
@@ -7,81 +7,61 @@ import Button from '../../../../../models/ui/button/button';
 import Breadcrumbs from '../../../../../models/ui/breadcrumbs/breadcrumbs';
 import AddService from './components/add-service/add-service.services';
 import { ArrowNext } from '../../../../../assets/icons/icons';
+import { connect } from 'react-redux';
+import { postService, updateService, deleteService } from '../../../../../store/business/service/service.actions';
+import { getLoading, getError, getServices } from '../../../../../store/business/service/service.selectors';
+import { cloneDeep } from 'lodash'
 
-export default function SerivcesSettings() {
-    const [Categories, setCategories] = useState(['תספורת', 'צבע', 'חפיפה']);
-    const [Services, setServices] = useState<Service[]>([
-        {
-            id: '1',
-            category: 'תספורת',
-            title: 'תספורת גבר',
-            price: 40,
-            duration: 20,
-            available: false
-        },
-        {
-            id: '2',
-            category: 'תספורת',
-            title: 'תספורת אישה',
-            price: 60,
-            duration: 40,
-            available: true
-        },
-        {
-            id: '3',
-            category: 'צבע',
-            title: 'צבע אישה',
-            price: 120,
-            duration: 50,
-            available: true
-        },
-        {
-            id: '4',
-            category: 'חפיפה',
-            title: 'חפיפה',
-            price: 20,
-            duration: 5,
-            available: true
-        },
-        {
-            id: '5',
-            category: 'חפיפה',
-            title: 'חפיפה מושקעת',
-            price: 40,
-            duration: 70,
-            available: true
-        },
+interface StateProps {
+    loading: boolean;
+    error: string;
+    services: Service[]
+}
 
-    ]);
+interface DispatchProps {
+    postService: typeof postService;
+    updateService: typeof updateService;
+    deleteService: typeof deleteService;
+}
+
+type Props = DispatchProps & StateProps;
+const SerivcesSettings: React.FC<Props> = (props) => {
+    const [Categories, setCategories] = useState<string[]>([]);
     const [ServiceToUpdate, setServiceToUpdate] = useState<Service | null>(null)
     const [Modal, setModal] = useState(false);
 
-    const addNewService = (service: Service) => {
+    useEffect(() => {
+        const c = props.services.map(s => s.category);
+       const  arr = c.filter (function (value, index, array) { 
+            return array.indexOf (value) == index;
+        });
+        setCategories(arr)
+    }, [props.services]);
 
-            if (service.id) {
-                const s = Services.find(s => s.id === service.id);
-                if (s === undefined) return;
-                s.category = service.category;
-                s.duration = service.duration;
-                s.price = service.price;
-                s.title = service.title;
-                s.available = service.available;
-                setServiceToUpdate(null)
-            }
-            else {
-                const services = [...Services];
-                services.push(service);
-                setServices(services);
-            }
-            setModal(false)
-        
+    const addNewService = (service: Service) => {
+        if (service._id) {
+            const s = cloneDeep(props.services.find(s => s._id === service._id));
+            if (s === undefined) return;
+            s.category = service.category;
+            s.duration = service.duration;
+            s.price = service.price;
+            s.title = service.title;
+            s.available = service.available;
+            setServiceToUpdate(null);
+            props.updateService(s);
+        }
+        else {
+            props.postService(service);
+        }
+        setModal(false)
     }
 
     const deleteService = (service: Service) => {
+        props.deleteService(service);
     }
 
     const updateService = (service: Service) => {
-        if (Services.find(s => s.id === service.id)) {
+        if (props.services.find(s => s._id === service._id)) {
             setServiceToUpdate(service);
             setModal(true)
         }
@@ -112,9 +92,9 @@ export default function SerivcesSettings() {
                         </thead>
                         <tbody>
                             {
-                                Services.map(s =>
-                                    <tr key={s.duration * s.price}>
-                                        <td>{s.id}</td>
+                                props.services.map((s: Service, i: number) =>
+                                    <tr key={s._id}>
+                                        <td>{i + 1}</td>
                                         <td>{s.category}</td>
                                         <td>{s.title}</td>
                                         <td>{s.price}₪</td>
@@ -142,3 +122,17 @@ export default function SerivcesSettings() {
         </React.Fragment>
     )
 }
+
+const mapStateToProps = (state: any) => ({
+    loading: getLoading(state),
+    error: getError(state),
+    services: getServices(state)
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+    postService: (service: Service) => dispatch(postService(service)),
+    updateService: (service: Service) => dispatch(updateService(service)),
+    deleteService: (service: Service) => dispatch(deleteService(service))
+});
+
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(SerivcesSettings);

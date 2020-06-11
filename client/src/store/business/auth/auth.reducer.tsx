@@ -27,6 +27,7 @@ export const authReducer = (state = initialAuthState, action: allAuthActionTypes
       console.log("SIGN_IN_CHECK");
       return {
         ...state,
+        loading: false,
         isSignIn: action.ans,
         isAdmin: action.isAdmin,
       };

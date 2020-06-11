@@ -1,4 +1,5 @@
 const moment = require("moment");
+const initialHours = require('../../utils/system/hours');
 
 const { error422, error404, error403Admin, error401guest } = require("../../utils/error/dbErrorHandler");
 
@@ -12,7 +13,10 @@ exports.postBuisnessDetails = async (req, res, next) => {
     const Business = require("../../models/details.model")(req.mongo);
 
     const detailsExist = await Business.findOneAndUpdate(updatdeDetail);
-    if (!detailsExist) await new Business(updatdeDetail).save();
+    if (!detailsExist) {
+      updatdeDetail.hours = initialHours;
+      await new Business(updatdeDetail).save();
+    }
 
     res.status(201).json({
       msg: "update buisness details",
@@ -46,18 +50,18 @@ exports.postBuisnessHours = async (req, res, next) => {
     // error422(req);
 
     error403Admin(req);
-    const schedule = { ...req.body.schedule };
+    const hours = { ...req.body };
 
     const Business = require("../../models/details.model")(req.mongo);
-
-    const buisness = await Business.findOne();
-    buisness.schedule = schedule;
+    
+    const buisness = await Business.findOne();    
+    buisness.hours = hours;
 
     await buisness.save();
 
     res.status(200).json({
       msg: "update buisness hours",
-      buisness,
+      hours: buisness.hours,
     });
   } catch (err) {
     return next(err);

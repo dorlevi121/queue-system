@@ -104,9 +104,9 @@ const CalendarUser = () => {
             {OpenModal && <NewQueue event={NewEvent} close={() => setOpenModal(false)} addNewQueue={addNewEvent} />}
             <div className={CalendarStyle.Calendar}>
                 <div className={CalendarStyle.Header}>
-                    <Button color='orange' onClick={() => setCurWeek(CurWeek + 1)}>שבוע הבא</Button>
                     <Button color='purple' onClick={() => setCurWeek(CurWeek - 1)}>שבוע קודם</Button>
                     <Button color='orange' onClick={() => setCurWeek(parseInt(moment(new Date()).format('WW')))}>שבוע נוכחי</Button>
+                    <Button color='orange' onClick={() => setCurWeek(CurWeek + 1)}>שבוע הבא</Button>
 
                 </div>
                 <div className={CalendarStyle.Content}>

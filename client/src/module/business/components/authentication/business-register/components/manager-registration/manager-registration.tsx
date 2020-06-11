@@ -30,16 +30,13 @@ let nextPage = false;
 type Props = DispatchProps & StateProps & OwnProps;
 const ManagerRegistration: React.FC<Props> = (props) => {
 
-
-  const [error, setError] = useState<string>("");
-
+  const [Error, setError] = useState<string>("");
   const [Form, setForm] = useState<any>({
     firstName: {
       ...plainText, elementConfig: {
         type: "text",
         placeholder: language.firstName[1],
       },
-      value: "ddd",
       label: language.firstName[1],
     },
     lastName: {
@@ -47,20 +44,19 @@ const ManagerRegistration: React.FC<Props> = (props) => {
         type: "text",
         placeholder: language.lastName[1],
       },
-      value: "ddd",
       label: language.lastName[1],
     },
     phone: {
-      ...phone, value: '0502243024'
+      ...phone, 
     }
     , email: {
-      ...email, value: 'd@d.c'
+      ...email,
     },
     password: {
-      ...password, value: '111111'
+      ...password
     },
     validPassword: {
-      ...password, label: language.confirmPassword[1], value: '111111'
+      ...password, label: language.confirmPassword[1]
     }
   });
 
@@ -92,17 +88,16 @@ const ManagerRegistration: React.FC<Props> = (props) => {
 
   // Checks the information in front of the server
   const onClickNext = () => {
-    if (Error || props.error) return;
-
+    if(Error) return;
     let ansForm = Object.assign({},
       ...Object.keys(Form).map((k) => ({ [k]: Form[k].value }))
     );
     // props.step('increment');
-    // props.registerEmployee(EmployeeDetails);
+    props.registerEmployee(ansForm);
     nextPage = true;
   };
 
-  if (!props.loading && nextPage && error.length <= 1 && !props.error && !CheckPhoneValidation) {
+  if (!props.loading && nextPage && Error.length <= 1 && !props.error && !CheckPhoneValidation) {
     setCheckPhoneValidation(true);
   }
 
@@ -120,7 +115,7 @@ const ManagerRegistration: React.FC<Props> = (props) => {
       <AuthenticationHeadrer
         title={language.managerHeaderTitle[1]}
         subTitle={language.managerHeaderSubTitle[1]}
-        error={error ? error : props.error}
+        error={Error ? Error : props.error}
       />
       {
         CheckPhoneValidation ?

@@ -9,6 +9,7 @@ import SwitchButton from '../../../../../../../models/ui/switch-button/switch-bu
 import { plainText } from '../../../../../../../models/ui/input/utility/input-types.input';
 import * as language from '../../../../../../../assets/language/language';
 import { inputChanged } from '../../../../../../../models/ui/input/utility/update-Input.input';
+import { cloneDeep } from 'lodash';
 
 interface OwnProps {
     close: () => void;
@@ -25,7 +26,7 @@ const AddService: React.FC<OwnProps> = (props) => {
             ...plainText, label: language.categoryName[1], value: props.updateService ? props.updateService.category : ""
         },
         title: {
-            ...plainText, label: language.servicesHeaderTitle[1],
+            ...plainText, label: language.serviceName[1],
             value: props.updateService ? props.updateService.title : ""
         },
         price: {
@@ -75,13 +76,14 @@ const AddService: React.FC<OwnProps> = (props) => {
 
     const addNewService = () => {
         if (Error) return;
-
-        const copyForm = Form;
+        const copyForm = cloneDeep(Form);
         copyForm['available'] = Available;
+        if (props.updateService)
+            copyForm['_id'] = props.updateService._id;
         let ansForm = Object.assign(
             {},
             ...Object.keys(copyForm).map((k) => {
-                if (k === 'links') {
+                if (k === '_id' || k === 'available') {
                     return ({ [k]: copyForm[k] })
                 }
                 return ({ [k]: copyForm[k].value })
@@ -101,9 +103,6 @@ const AddService: React.FC<OwnProps> = (props) => {
             config: Form[key],
         };
     });
-
-    console.log(Error);
-
 
     return (
         <Modal title="הוספת שירות" close={props.close} footer={<Footer />}>

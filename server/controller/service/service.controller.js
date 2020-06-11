@@ -63,11 +63,9 @@ exports.putService = async (req, res, next) => {
     const Service = require("../../models/service.model")(req.mongo);
 
     error403Admin(req);
-
-    const service = await Service.findOneAndUpdate({ ...req.body });
-
-    res.status(205).json({
-      message: "service update",
+    const service = await Service.findOneAndUpdate({ _id: req.body.id }, req.body, { new: true });
+    res.status(200).json({
+      msg: "service update",
       service: service,
     });
   } catch (error) {
@@ -76,15 +74,14 @@ exports.putService = async (req, res, next) => {
 };
 
 exports.deleteService = async (req, res, next) => {
-  try {
-    const serviceId = req.body._id;
-
+  try {    
+    const serviceId = req.body.service._id;
     const Service = require("../../models/service.model")(req.mongo);
 
     await error403Admin(req);
 
     await Service.findByIdAndDelete(serviceId);
-    res.status(200).json({ message: "service deleted" });
+    res.status(200).json({ msg: "service deleted" });
   } catch (err) {
     return next(err);
   }

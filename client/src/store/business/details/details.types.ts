@@ -4,7 +4,7 @@ import { BusinesHours } from "../../../models/system/busines-hours";
 export interface BusinessState {
   error: string;
   loading: boolean;
-  deatils: BusinessDetails | null;
+  details: BusinessDetails | null;
   hours: BusinesHours
 }
 
@@ -32,7 +32,7 @@ export interface faildDetailsActionType extends AuthActionPattern {
 
 export interface getDetailsActionType extends AuthActionPattern {
   type: DetailsActionsEnum.GET_DETAILS;
-  deatils: BusinessDetails;
+  details: BusinessDetails;
 }
 
 export interface successPostDetailsActionType extends AuthActionPattern {

@@ -70,8 +70,6 @@ const Autocomplete: React.FC<OwnProps> = (props) => {
         }
     }
     if (!props.word) optionList = undefined;
-    console.log(props.word);
-
 
     return (
         <div className={AutocompleteStyle.Options}>{optionList}</div>

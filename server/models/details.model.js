@@ -68,6 +68,11 @@ const SingletonBusinessSchema = (() => {
           require: false,
           default: {},
         },
+        hours: {
+          type: Map,
+          require: false,
+          default: {},
+        },
       },
       { timestamps: true }
     );

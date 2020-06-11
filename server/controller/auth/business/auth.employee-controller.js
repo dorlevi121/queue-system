@@ -11,8 +11,6 @@ const bcrypt = require("bcrypt");
 exports.register = async (req, res, next) => {
   try {
     const domainUrl = req.get("domain");
-    console.log(domainUrl + "  Dor");
-
     req.mongo = mongoose.connection.useDb(domainUrl);
     employeeValidator;
     error422(req);

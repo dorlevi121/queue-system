@@ -20,7 +20,7 @@ type Props = DispatchProps & StateProps;
 const App: React.FC<Props> = (props) => {
 
   useEffect(() => {
-    props.signInCheck();
+    props.signInCheck(); 
   }, []);
   
 

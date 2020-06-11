@@ -1,5 +1,5 @@
 export type Service = {
-	id?: string,
+	_id?: string,
 	category: string,
 	title: string,
 	price: number,

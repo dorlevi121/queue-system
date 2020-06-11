@@ -1,6 +1,7 @@
 import { Service } from "../../../models/system/service";
 import { serviceActionsEnum } from "./service.types";
 import API from "../../../models/axios/axios";
+import { cloneDeep } from 'lodash'
 
 export const postService = (service: Service) => {
   return (dispatch: any, getState: any) => {
@@ -49,8 +50,11 @@ export const getAllServices = () => {
 export const updateService = (service: Service) => {
   return (dispatch: any, getState: any) => {
     dispatch({ type: serviceActionsEnum.START_SERVICE });
+    const copyS: any = cloneDeep(service);
+    copyS.id = service._id;
+    delete copyS._id;
 
-    API.put("business/service", service)
+    API.put("business/service", copyS)
       .then((res) => {
         return dispatch({
           type: serviceActionsEnum.SUCCESS_UPDATE_SERVICE,
@@ -70,12 +74,17 @@ export const updateService = (service: Service) => {
 export const deleteService = (service: Service) => {
   return (dispatch: any, getState: any) => {
     dispatch({ type: serviceActionsEnum.START_SERVICE });
+    const config = {
+      data: {
+        service: service
+      }
+    }
 
-    API.delete("business/service/" + service.id)
+    API.delete("business/service/", config)
       .then(() => {
         return dispatch({
           type: serviceActionsEnum.SUCCESS_DELETE_SERVICE,
-          serviceId: service.id
+          serviceId: service._id
         });
       })
       .catch((error: any) => {

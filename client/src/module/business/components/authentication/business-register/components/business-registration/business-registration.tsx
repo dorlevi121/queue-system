@@ -49,7 +49,7 @@ const BusinessRegistration: React.FC<Props> = (props) => {
       },
       value: "", label: language.address[1],
       validation: {
-        required: true,
+        required: false,
         minLen: 10,
       }
     },
@@ -58,7 +58,7 @@ const BusinessRegistration: React.FC<Props> = (props) => {
     about: {
       ...plainText, label: "אודות", elementType: 'textArea',
       validation: {
-        required: true,
+        required: false,
         minLen: 20,
       }
     }
@@ -90,7 +90,7 @@ const BusinessRegistration: React.FC<Props> = (props) => {
 
   // Checks the information in front of the server
   const onClickNext = () => {
-    if (Error || props.error) return;
+    if (Error) return;
 
     const copyForm = Form;
     copyForm['links'] = Links;
@@ -105,12 +105,13 @@ const BusinessRegistration: React.FC<Props> = (props) => {
       }
       ));
     nextPage = true;
-    //props.postDetails(ansForm);
+    props.postDetails(ansForm);
     // props.setNewPasswordEmployee(Form, token);
 
   };
 
   if (!props.loading && nextPage && Error.length <= 1 && !props.error) {
+    props.step("increment")
   }
 
   const formElementsArray = Object.keys(Form).map((key) => {

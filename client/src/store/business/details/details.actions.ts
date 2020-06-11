@@ -22,16 +22,18 @@ export const getDetails = () => {
   };
 };
 
-// Put and Posyt
-export const postDetails = (form: BusinessDetails) => {
+// Put and Post
+export const postDetails = (details: BusinessDetails) => {
   return (dispatch: any, getState: any) => {
     dispatch({ type: DetailsActionsEnum.START_DETAILS });
 
-    API.post("business/details", form)
-      .then(() => {
-        return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_DETAILS });
+    API.post("business/details", details)
+      .then(res => {        
+        return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_DETAILS, details: res.data.updatdeDetail });
       })
       .catch((error: any) => {
+        console.log(error);
+
         const msg = error.response.data.message;
         return dispatch({
           type: DetailsActionsEnum.FALID_DETAILS,
@@ -46,10 +48,12 @@ export const postBuisnessHours = (hours: BusinesHours) => {
     dispatch({ type: DetailsActionsEnum.START_DETAILS });
 
     API.post("business/details/hours", hours)
-      .then(() => {
-        return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_DETAILS });
+      .then((res) => {
+        return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_HOURS, hours: res.data.hours });
       })
       .catch((error: any) => {
+        console.log(error);
+
         const msg = error.response.data.message;
         return dispatch({
           type: DetailsActionsEnum.FALID_DETAILS,

@@ -6,5 +6,5 @@ import { businessReducer } from "./business/details/details.reducer";
 export const rootReducer = combineReducers({
   auth: authReducer,
   service: serviceReducer,
-  business: businessReducer,
+  details: businessReducer,
 });

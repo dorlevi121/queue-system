@@ -15,8 +15,7 @@ module.exports = (app, mongoose) => {
   app.use("/:domain", async (req, res, next) => {
     try {
 
-      const domain = req.params.domain;
-
+      const domain = req.params.domain;      
       req.mongo = mongoose.connection.useDb(domain);
       next();
     } catch (error) {

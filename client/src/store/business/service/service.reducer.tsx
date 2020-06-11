@@ -1,4 +1,5 @@
 import { initialserviceState } from "./service.state";
+import { cloneDeep } from 'lodash';
 import {
   startServicectionType,
   successPostServicesActionType,
@@ -8,6 +9,7 @@ import {
   successUpdateServiceActionType,
   successDeleteServiceActionType
 } from "./service.types";
+import { Service } from "../../../models/system/service";
 
 type allserviceActionTypes =
   startServicectionType | successPostServicesActionType | successUpdateServiceActionType
@@ -45,19 +47,22 @@ export const serviceReducer = (state = initialserviceState, action: allserviceAc
     case serviceActionsEnum.SUCCESS_UPDATE_SERVICE:
       console.log("SUCCESS_UPDATE_SERVICE");
       const s = [...state.services];
-      console.log(s);
 
-      for (let index = 0; index < s.length; index++) {
-        if (action.service.id === s[index].id) {
-          s.splice(index, 1, action.service);
-          break;
+      s.forEach((service: Service, i) => {
+        if (service._id === action.service._id) {
+          service._id = action.service._id;
+          service.available = action.service.available;
+          service.category = action.service.category;
+          service.duration = action.service.duration;
+          service.price = action.service.price;
+          service.title = action.service.title;
         }
-      }
+      })
       return {
         ...state,
         loading: false,
         error: "",
-        services: s
+        services: cloneDeep(s)
       };
 
     case serviceActionsEnum.SUCCESS_GET_ALL_SERVICES:
@@ -69,15 +74,17 @@ export const serviceReducer = (state = initialserviceState, action: allserviceAc
         services: action.services
       };
 
-      case serviceActionsEnum.SUCCESS_DELETE_SERVICE:
-        const servicesUpdate = [...state.services].filter(ser => ser.id === action.serviceId);
-        console.log("SUCCESS_DELETE_SERVICE");
-        return {
-          ...state,
-          loading: false,
-          error: "",
-          services:servicesUpdate
-        };
+    case serviceActionsEnum.SUCCESS_DELETE_SERVICE:
+      const servicesUpdate = [...state.services].filter(ser => ser._id !== action.serviceId);
+      console.log(servicesUpdate);
+
+      console.log("SUCCESS_DELETE_SERVICE");
+      return {
+        ...state,
+        loading: false,
+        error: "",
+        services: servicesUpdate
+      };
   }
   return state;
 };

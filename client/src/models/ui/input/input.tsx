@@ -15,7 +15,6 @@ interface OwnProps {
     touched?: boolean;
     changed?: (e: any) => void;
     placeholder?: string;
-    type?: any;
     onChange?: (e: any) => void;
     style?: {};
     class?: "line" | "border";
@@ -36,7 +35,7 @@ const Input: React.FC<OwnProps> = (props) => {
                         placeholder={props.label}
                         value={props.value}
                         onChange={props.changed}
-                        autoComplete="on"
+                        type={props.elementConfig?.type}
                     />
                 );
             break;
