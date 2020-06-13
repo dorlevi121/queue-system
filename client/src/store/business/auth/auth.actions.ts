@@ -101,7 +101,7 @@ export const signInCheck = () => {
           services,
         });
         dispatch({
-          type: DetailsActionsEnum.GET_DETAILS,
+          type: DetailsActionsEnum.SUCCESS_GET_DETAILS,
           details: businessDeatails,
         });
         return;

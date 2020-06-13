@@ -53,8 +53,8 @@ exports.postBuisnessHours = async (req, res, next) => {
     const hours = { ...req.body };
 
     const Business = require("../../models/details.model")(req.mongo);
-    
-    const buisness = await Business.findOne();    
+
+    const buisness = await Business.findOne();
     buisness.hours = hours;
 
     await buisness.save();
@@ -68,31 +68,23 @@ exports.postBuisnessHours = async (req, res, next) => {
   }
 };
 
-exports.postDefualtHours = async (req, res, next) => {
-  var d = new Date();
-  d.setHours(d.getHours() + 5);
-  var a = new Date();
-  a = moment(a).format("HH:mm");
-  d = moment(d).format("HH:mm");
-  const arr = [
-    { day: "friday", startTime: a, endTime: d },
-    { day: "mon", startTime: a, endTime: d },
-    { day: "tue", startTime: a, endTime: d },
-  ];
-  console.log(a);
-
+exports.postBuisnessSchedule = async (req, res, next) => {
   try {
+    // error422(req);
+
+    error403Admin(req);
+    const schedule = { ...req.body };
+
     const Business = require("../../models/details.model")(req.mongo);
 
     const buisness = await Business.findOne();
-
-    buisness.schedule = arr;
+    buisness.schedule = schedule;
 
     await buisness.save();
 
     res.status(200).json({
-      msg: "update buisness hours",
-      buisness,
+      msg: "update buisness schedule",
+      schedule: buisness.schedule,
     });
   } catch (err) {
     return next(err);

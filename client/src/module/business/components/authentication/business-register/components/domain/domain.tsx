@@ -9,6 +9,7 @@ import AuthenticationHeadrer from '../../../shared/authentication-header/authent
 import Input from '../../../../../../../models/ui/input/input';
 import { domain } from '../../../../../../../models/ui/input/utility/input-types.input';
 import { inputChanged } from '../../../../../../../models/ui/input/utility/update-Input.input';
+import { divide } from 'lodash';
 
 interface OwnProps {
     step: (step: 'decrement' | 'increment') => void,
@@ -27,7 +28,7 @@ interface DispatchProps {
 let nextPage = false;
 
 type Props = DispatchProps & StateProps & OwnProps;
-const Domain: React.FC<Props> = (props) => {
+const Domain: React.FC<Props> = React.memo(props => {
     const [Form, setForm] = useState<any>({
         domain: {
             ...domain,
@@ -67,11 +68,12 @@ const Domain: React.FC<Props> = (props) => {
         setError("");
         props.setDomain(Form.domain.value);
         nextPage = true;
-
-
     };
 
-    if (!props.loading && !props.error && nextPage && Error.length <= 1) props.step('increment');
+    if (!props.loading && !props.error && nextPage && Error.length <= 1) {
+        props.step('increment');
+    }
+    console.log('domain', Form, Error);
 
     return (
         <React.Fragment>
@@ -106,7 +108,12 @@ const Domain: React.FC<Props> = (props) => {
             }
         </React.Fragment>
     )
-}
+},
+    (prex, next) => {
+        if (!next.loading && !next.error && nextPage && Error.length <= 1)
+            return false;
+        return true;
+    });
 
 const mapStateToProps = (state: any) => ({
     loading: getLoading(state),

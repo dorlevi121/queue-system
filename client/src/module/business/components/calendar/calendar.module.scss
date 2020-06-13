@@ -95,5 +95,10 @@
         background-color: #222a45;
       }
     }
+
+    & .NoWork {
+      background-color: $text-hint;
+      cursor: none;
+    }
   }
 }

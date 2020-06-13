@@ -2,6 +2,7 @@ import { DetailsActionsEnum } from "./details.types";
 import API from "../../../models/axios/axios";
 import { BusinessDetails } from "../../../models/system/business-details";
 import { BusinesHours } from "../../../models/system/busines-hours";
+import { BusinessSchedule } from "../../../models/system/event";
 
 export const getDetails = () => {
   return (dispatch: any, getState: any) => {
@@ -62,3 +63,24 @@ export const postBuisnessHours = (hours: BusinesHours) => {
       });
   };
 };
+
+export const postBusinessSchedule = (schedule: BusinessSchedule) => {
+  return (dispatch: any, getState: any) => {
+    dispatch({ type: DetailsActionsEnum.START_DETAILS });
+
+    API.post("business/details/schedule", schedule)
+      .then((res) => {
+        return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_SCHEDULE, schedule: res.data.schedule });
+      })
+      .catch((error: any) => {
+        console.log(error);
+
+        const msg = error.response.data.message;
+        return dispatch({
+          type: DetailsActionsEnum.FALID_DETAILS,
+          error: msg,
+        });
+      });
+  };
+};
+

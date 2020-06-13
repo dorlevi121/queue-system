@@ -103,10 +103,10 @@ const OpeningHours: React.FC<Props> = (props) => {
                                     <p className={HoursStyle.Day} >{d}</p>
 
                                     <SwitchButton state={isAvailable} onChange={onClickAvailable} />
-                                    <Options disabled={!isAvailable} options={hours.hours} title="פתיחה"
+                                    <Options disabled={!isAvailable} options={hours.hours} title="פתיחה" styleSelect={{fontSize: '.8rem'}}
                                         onChange={onChangeHour} id="start" value={Hours[curEnglishDay].length ? Hours[curEnglishDay][0].start : ""}
                                     />
-                                    <Options disabled={!isAvailable} options={endHours} title="סגירה"
+                                    <Options disabled={!isAvailable} options={endHours} title="סגירה" styleSelect={{fontSize: '.8rem'}}
                                         onChange={onChangeHour} id="end" value={Hours[curEnglishDay].length ? Hours[curEnglishDay][0].end : ""}
                                     />
                                 </div>

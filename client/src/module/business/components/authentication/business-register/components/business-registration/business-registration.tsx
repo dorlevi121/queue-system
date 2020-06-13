@@ -121,7 +121,6 @@ const BusinessRegistration: React.FC<Props> = (props) => {
     };
   });
 
-
   return (
     <div className={BusinessRegistrationStyle.Business}>
       <AuthenticationHeadrer

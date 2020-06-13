@@ -4,5 +4,6 @@ export const initialAuthState: BusinessState = {
   error: "",
   loading: false,
   details: null,
-  hours: {} 
+  hours: {} ,
+  schedule: {}
 };

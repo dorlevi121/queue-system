@@ -8,11 +8,14 @@ import * as language from '../../../../../../assets/language/language';
 import { plainText, phone } from '../../../../../../models/ui/input/utility/input-types.input';
 import { inputChanged } from '../../../../../../models/ui/input/utility/update-Input.input';
 import Input from '../../../../../../models/ui/input/input';
+import { Service } from '../../../../../../models/system/service';
+import Options from '../../../../../../models/ui/options/options';
 
 interface OwnProps {
     close: () => void;
-    addNewQueue: (event: Event) => void;
-    event: { date: string, hour: string }
+    addNewEvent: (event: Event) => void;
+    date: { date: string, hour: string },
+    services: Service[]
 }
 
 const NewQueue: React.FC<OwnProps> = (props) => {
@@ -24,6 +27,10 @@ const NewQueue: React.FC<OwnProps> = (props) => {
             },
             value: "",
             label: language.eventTitle[1],
+            validation: {
+                required: false,
+                minLen: 2,
+            }
         },
         description: {
             ...plainText, elementConfig: {
@@ -32,14 +39,21 @@ const NewQueue: React.FC<OwnProps> = (props) => {
             },
             value: "", label: language.description[1],
             validation: {
-                required: true,
-                minLen: 10,
+                required: false,
+                minLen: 2,
             }
         },
         clientPhone: {
             ...phone, value: "", label: language.clientPhone[1]
+        },
+        start: {
+            ...plainText, value: props.date.hour, editable: false, label: "שעת התחלה"
+        },
+        end: {
+            ...plainText, value: '', editable: false, label: "שעת סיום"
         }
     });
+    const [Service, setService] = useState<Service | undefined>(undefined);
     const [Error, setError] = useState<string>("");
 
     const inputChangedHandler = (e: any, inputIdentifier: any) => {
@@ -55,17 +69,10 @@ const NewQueue: React.FC<OwnProps> = (props) => {
         }
     };
 
-    const handleChange = (e: any, name: string) => {
-        setForm({
-            ...Form, [name]: e.target.value
-        });
-    }
-
     const updateDetails = () => {
         if (Error) return;
-
         const copyForm = Form;
-        // copyForm['links'] = BusinessDetails.links;
+        copyForm['service'] = Service;
         let ansForm = Object.assign(
             {},
             ...Object.keys(copyForm).map((k) => {
@@ -75,8 +82,19 @@ const NewQueue: React.FC<OwnProps> = (props) => {
                 return ({ [k]: copyForm[k].value })
             }))
 
-        props.addNewQueue(ansForm);
+        props.addNewEvent(ansForm);
         props.close();
+    }
+
+    const servicesName = props.services.map(s => s.title);
+
+    const onChangeService = (e: any) => {
+        const service = props.services.find(s => s.title === e.target.value);
+        const endTime = moment(props.date.hour, "HH:mm").add(service?.duration, 'minute').format("HH:mm");
+        setService(service);
+        setForm({
+            ...Form, end: { ...Form.end, value: endTime }
+        })
     }
 
     const formElementsArray = Object.keys(Form).map((key) => {
@@ -96,7 +114,8 @@ const NewQueue: React.FC<OwnProps> = (props) => {
     return (
         <div className={NewQueueStyle.NewQueue}>
             <Modal title="קביעת תור" close={props.close} footer={footer} >
-                {props.event.date + " " + props.event.hour}
+                <Options options={servicesName} onChange={onChangeService} disabled={false} value={Service ? Service.title : ""}
+                    title="בחר שירות" style={{ width: '300px', margin: 'auto' }} defaultValue="בחר שירות" />
 
                 {formElementsArray.map((formElement) => (
                     <Input

@@ -1,9 +1,16 @@
+import { Service } from "./service";
+
 export type Event = {
     id?: number,
+    service: Service
     title?: string,
-    clientId: string,
+    clientPhone: string,
     employeeId: number,
     description?: string,
-    start: any,
-    end: any,
+    start: string,
+    end: string,
 }
+
+export type BusinessSchedule = {
+    [weekNumber: number]: { [startHour: string]: Event }[]
+};

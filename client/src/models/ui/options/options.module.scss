@@ -10,17 +10,15 @@
   & .Select {
     position: relative;
     display: flex;
-    width: 80px;
-    height: 28px;
+    height: 30px;
     line-height: 3;
     background: $white;
     border: 1px solid $text-hint;
     border-radius: 5px;
-    color: $text-body;
-    font-weight: 100;
     overflow: hidden;
-    font-size: $small-size;
     font-family: inherit;
+    font-size: 1rem;
+    color: $text-body;
     cursor: pointer;
 
     &::-ms-expand {
@@ -34,6 +32,13 @@
 
     &:hover {
       border-color: $purple;
+    }
+
+    & option {
+      &:checked {
+        background: rgba($color: $purple, $alpha: .7);
+        color: $white;
+      }
     }
   }
 }

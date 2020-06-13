@@ -25,7 +25,11 @@ router.post(
   businessDetailsController.postBuisnessHours
 );
 
-// router.post("/defualthours", businessDetailsController.postDefualtHours);
-
+router.post(
+  "/schedule",
+  // businessHoursValidator,
+  isAuth("employee"),
+  businessDetailsController.postBuisnessSchedule
+);
 
 module.exports = router;
