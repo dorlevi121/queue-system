@@ -6,8 +6,7 @@ export interface BusinessState {
   error: string;
   loading: boolean;
   details: BusinessDetails | null;
-  hours: BusinesHours,
-  schedule: BusinessSchedule
+  hours: BusinesHours
 }
 
 export enum DetailsActionsEnum {
@@ -16,7 +15,6 @@ export enum DetailsActionsEnum {
   SUCCESS_GET_DETAILS = "SUCCESS_GET_DETAILS",
   SUCCESS_POST_DETAILS = "SUCCESS_POST_DETAILS",
   SUCCESS_POST_HOURS = "SUCCESS_POST_HOURS",
-  SUCCESS_POST_SCHEDULE = "SUCCESS_POST_SCHEDULE",
 }
 
 export interface AuthActionPattern {
@@ -45,9 +43,4 @@ export interface successPostDetailsActionType extends AuthActionPattern {
 export interface successPostHoursActionType extends AuthActionPattern {
   type: DetailsActionsEnum.SUCCESS_POST_HOURS;
   hours: BusinesHours
-}
-
-export interface successPostScheduleActionType extends AuthActionPattern {
-  type: DetailsActionsEnum.SUCCESS_POST_SCHEDULE;
-  schedule: BusinessSchedule
 }

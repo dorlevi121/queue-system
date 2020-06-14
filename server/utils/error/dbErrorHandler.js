@@ -56,7 +56,7 @@ exports.error401guest = (guest, buisnessDetails) => {
 
 
 exports.error403Admin = (req) => {
-  if (!req.employee.isAdmin) {
+  if (!req.employee.isAdmin) {    
     const error = new Error(hebrewErrorValidator.notAuth401HebError);
     error.statusCode = 403;
     throw error;

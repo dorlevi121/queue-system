@@ -1,88 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CalendarStyle from './calendar.module.scss';
 import moment from 'moment';
 import { cloneDeep } from 'lodash';
 import * as helper from './components/helper';
-import { Event, BusinessSchedule } from '../../../../models/system/event';
+import { Event, BusinessScheduleWeek } from '../../../../models/system/event';
 import Button from '../../../../models/ui/button/button';
 import NewQueue from './components/add-new-queue/add-new-queue.calendar';
 import { connect } from 'react-redux';
 import { BusinesHours } from '../../../../models/system/busines-hours';
-import { getHours, getSchedule } from '../../../../store/business/details/details.selectors';
+import { getHours } from '../../../../store/business/details/details.selectors';
 import { FullEngDays } from '../../../../assets/days/days';
 import { Service } from '../../../../models/system/service';
 import { getServices } from '../../../../store/business/service/service.selectors';
-import { postBusinessSchedule } from '../../../../store/business/details/details.actions';
+import { postScheduleWeek, updateScheduleWeek, updateWeekNumber } from '../../../../store/business/schedule/schedule.actions';
+import { getScheduleWeek, getWeekNumber } from '../../../../store/business/schedule/schedule.selectors';
+import { scheduleActionsEnum } from '../../../../store/business/schedule/schedule.types';
 
 interface StateProps {
     hours: BusinesHours,
     services: Service[],
-    schedule: BusinessSchedule
+    scheduleWeek: any,
+    weekNumber: number
 }
 
 interface DispatchProps {
-    postBusinessSchedule: typeof postBusinessSchedule;
+    postScheduleWeek: typeof postScheduleWeek;
+    updateScheduleWeek: typeof updateScheduleWeek;
+    updateWeekNumber: typeof updateWeekNumber
 }
 
 type Props = DispatchProps & StateProps;
 const CalendarUser: React.FC<Props> = (props) => {
-    const [StartHour] = useState(7);
-    const [EndHour] = useState(20);
-    const [CurWeek, setCurWeek] = useState(parseInt(moment(new Date()).format('WW')))
+    const [ActivityTime, setActivityTime] = useState({
+        start: 7,
+        end: 20
+    })
     const [OpenModal, setOpenModal] = useState<boolean>(false)
-    const [NewEvent, setNewEvent] = useState<{ date: string, hour: string }>({ date: "", hour: "" });
-    const [Events, setEvents] = useState<{ [weekNumber: number]: { [id: string]: Event }[] }>(props.schedule)
-    let eventsWeek: { [id: string]: Event }[] = Events[CurWeek] ? Events[CurWeek] : new Array(7); // all the events of week i    
-    console.log(Events);
-    console.log(eventsWeek);
+    const [Time, setTime] = useState<{ date: string, hour: string }>({ date: "", hour: "" });
+    const [CurEvent, setCurEvent] = useState<Event | undefined>();
+    const [EventsWeek, setEventsWeek] = useState<BusinessScheduleWeek>([])
+
+    useEffect(() => {
+        const events = props.scheduleWeek.events ? props.scheduleWeek.events : props.scheduleWeek
+        setEventsWeek(events)
+    }, [props.scheduleWeek])
+
 
     const addNewEvent = (event: Event) => {
-        event.start = moment(event.start, "HH:mm").format("HH:mm");
-        event.end = moment(event.end, "HH:mm").format("HH:mm");
-        const copyEvents = cloneDeep(Events)
-        const CurEventsWeek = copyEvents[CurWeek] ? cloneDeep(copyEvents[CurWeek]) : new Array(7);
-        const dayEvents: { [id: string]: Event } = CurEventsWeek[3] ? CurEventsWeek[3] : {};
-        dayEvents[event.start.toString()] = event;
-        CurEventsWeek[3] = dayEvents
-        copyEvents[CurWeek] = CurEventsWeek;
-        props.postBusinessSchedule(copyEvents)
-        setEvents(copyEvents)
-
+        const newEvent: Event = {
+            start: event.start,
+            end: event.end,
+            serviceId: event.serviceId,
+            employeeId: "111",
+            clientPhone: event.clientPhone,
+            isApprove: true,
+            isPaid: false,
+            title: event.title,
+            description: event.description
+        }
+        const dayNumber = moment(Time.date).day();
+        const CurEventsWeek = cloneDeep(EventsWeek);
+        const dayEvents: { [id: string]: Event } = CurEventsWeek[dayNumber] ? CurEventsWeek[dayNumber] : {};
+        dayEvents[newEvent.start.toString()] = newEvent;
+        CurEventsWeek[dayNumber] = dayEvents
+        props.updateScheduleWeek(CurEventsWeek, props.weekNumber)
     }
 
     const onSlotClick = (hour: string, date: string) => {
         setOpenModal(true);
-        setNewEvent({ date, hour });
-        // Duration time of event - minutes
-        // const durationOfEvent = moment.utc(moment(e, "YYYY-DD-MM HH:mm").diff(moment(s, "YYYY-DD-MM HH:mm"))).minutes();
-        // const sMin = (moment(s).hour() * 60) + moment(s).minute();
+        setTime({ date, hour });
     }
 
     const onEventClick = (hour: string, date: string, event: Event) => {
         setOpenModal(true);
-        setNewEvent({ date: date, hour: hour });
+        setCurEvent(event);
+        setTime({ date: date, hour: hour });
     }
 
-
-
-    const allDaysWeek = helper.getWeekDaysByWeekNumber(CurWeek);
+    const allDaysWeek = helper.getWeekDaysByWeekNumber(props.weekNumber);
 
     const isEvents: Event[] = []; // Array of events or false
     const slots: JSX.Element[] = []; // Hold the table
-    for (let i = StartHour; i < EndHour; i++) {
+    for (let i = ActivityTime.start; i < ActivityTime.end; i++) {
         for (let j = 0; j < 6; j++) {
             const hour = moment(i + ":" + j * 10, "HH:mm").format("HH:mm");
 
-            for (let k = 0; k < 6; k++) { // i represent a day
-                if (!eventsWeek[k]) continue; //O(1)
-                if (eventsWeek[k][hour]) { //O(1)
-                    isEvents[k] = eventsWeek[k][hour];
+            for (let day = 0; day < 6; day++) { // i represent a day
+                if (!EventsWeek[day]) continue; //O(1)
+                if (EventsWeek[day][hour]) { //O(1)
+                    isEvents[day] = EventsWeek[day][hour];
                 }
-                else if (isEvents[k]) {
-                    if (!moment(hour, 'HH:mm').isBefore(moment(isEvents[k].end, 'HH:mm'))) {
-                        delete isEvents[k];
+                else if (isEvents[day]) {
+                    if (!moment(hour, 'HH:mm').isBefore(moment(isEvents[day].end, 'HH:mm'))) {
+                        delete isEvents[day];
                     }
-
                 }
             }
 
@@ -100,11 +111,12 @@ const CalendarUser: React.FC<Props> = (props) => {
                                     </td>
                                 )
                             }
-                            if (isEvents[r]) { //If there is a event                                
+                            if (isEvents[r]) { //If there is a event        
+                                const service = props.services.find(s => s._id === isEvents[r].serviceId)
                                 return (
                                     <td key={r * 10} className={CalendarStyle.Slot + " " + CalendarStyle.Event}
                                         onClick={() => onEventClick(hour, day, isEvents[r])}>
-                                        {isEvents[r].title}
+                                        {service?.title}
                                     </td>
                                 );
                             }
@@ -137,12 +149,13 @@ const CalendarUser: React.FC<Props> = (props) => {
 
     return (
         <React.Fragment>
-            {OpenModal && <NewQueue date={NewEvent} close={() => setOpenModal(false)} addNewEvent={addNewEvent} services={props.services} />}
+            {OpenModal && <NewQueue date={Time} close={() => setOpenModal(false)} curEvent={CurEvent}
+                addNewEvent={addNewEvent} services={props.services} />}
             <div className={CalendarStyle.Calendar}>
                 <div className={CalendarStyle.Header}>
-                    <Button color='purple' onClick={() => setCurWeek(CurWeek - 1)}>שבוע קודם</Button>
-                    <Button color='orange' onClick={() => setCurWeek(parseInt(moment(new Date()).format('WW')))}>שבוע נוכחי</Button>
-                    <Button color='orange' onClick={() => setCurWeek(CurWeek + 1)}>שבוע הבא</Button>
+                    <Button color='purple' onClick={() => props.updateWeekNumber(props.weekNumber - 1)}>שבוע קודם</Button>
+                    <Button color='orange' onClick={() => props.updateWeekNumber(parseInt(moment(new Date()).format('WW')))}>שבוע נוכחי</Button>
+                    <Button color='orange' onClick={() => props.updateWeekNumber(props.weekNumber + 1)}>שבוע הבא</Button>
 
                 </div>
                 <div className={CalendarStyle.Content}>
@@ -166,11 +179,14 @@ const CalendarUser: React.FC<Props> = (props) => {
 const mapStateToProps = (state: any) => ({
     hours: getHours(state),
     services: getServices(state),
-    schedule: getSchedule(state)
+    scheduleWeek: getScheduleWeek(state),
+    weekNumber: getWeekNumber(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-    postBusinessSchedule: (schedule: BusinessSchedule) => dispatch(postBusinessSchedule(schedule))
+    postScheduleWeek: (schedule: BusinessScheduleWeek, weekNumber: number) => dispatch(postScheduleWeek(schedule, weekNumber)),
+    updateScheduleWeek: (schedule: BusinessScheduleWeek, weekNumber: number) => dispatch(updateScheduleWeek(schedule, weekNumber)),
+    updateWeekNumber: (weekNumber: number) => dispatch(updateWeekNumber(weekNumber))
 });
 
 export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(CalendarUser);

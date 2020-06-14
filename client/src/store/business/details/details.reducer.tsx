@@ -2,11 +2,11 @@ import { initialAuthState } from "./details.state";
 import { cloneDeep } from 'lodash'
 import {
   startDetailsActionType, successPostDetailsActionType, faildDetailsActionType, DetailsActionsEnum, successGetDetailsActionType,
-  successPostHoursActionType, successPostScheduleActionType
+  successPostHoursActionType
 } from "./details.types";
 
 type allAuthActionTypes = startDetailsActionType | successPostDetailsActionType | successPostHoursActionType
-  | faildDetailsActionType | successGetDetailsActionType | successPostScheduleActionType;
+  | faildDetailsActionType | successGetDetailsActionType;
 
 export const businessReducer = (state = initialAuthState, action: allAuthActionTypes) => {
   switch (action.type) {
@@ -35,7 +35,6 @@ export const businessReducer = (state = initialAuthState, action: allAuthActionT
         error: '',
         details: cloneDeep(action.details),
         hours: action.details.hours,
-        schedule: action.details.schedule
       };
 
     case DetailsActionsEnum.SUCCESS_POST_DETAILS:
@@ -56,14 +55,6 @@ export const businessReducer = (state = initialAuthState, action: allAuthActionT
         hours: action.hours
       };
 
-      case DetailsActionsEnum.SUCCESS_POST_SCHEDULE:
-        console.log("SUCCESS_POST_SCHEDULE");
-        return {
-          ...state,
-          loading: false,
-          error: '',
-          schedule: action.schedule
-        };
   }
   return state;
 };

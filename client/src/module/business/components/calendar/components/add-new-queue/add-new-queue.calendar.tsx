@@ -15,7 +15,8 @@ interface OwnProps {
     close: () => void;
     addNewEvent: (event: Event) => void;
     date: { date: string, hour: string },
-    services: Service[]
+    services: Service[],
+    curEvent: Event | undefined
 }
 
 const NewQueue: React.FC<OwnProps> = (props) => {
@@ -72,11 +73,11 @@ const NewQueue: React.FC<OwnProps> = (props) => {
     const updateDetails = () => {
         if (Error) return;
         const copyForm = Form;
-        copyForm['service'] = Service;
+        copyForm['serviceId'] = Service?._id;
         let ansForm = Object.assign(
             {},
             ...Object.keys(copyForm).map((k) => {
-                if (k === 'links') {
+                if (k === 'serviceId') {
                     return ({ [k]: copyForm[k] })
                 }
                 return ({ [k]: copyForm[k].value })
@@ -90,13 +91,14 @@ const NewQueue: React.FC<OwnProps> = (props) => {
 
     const onChangeService = (e: any) => {
         const service = props.services.find(s => s.title === e.target.value);
+        // Calculate duration time of event
         const endTime = moment(props.date.hour, "HH:mm").add(service?.duration, 'minute').format("HH:mm");
         setService(service);
         setForm({
             ...Form, end: { ...Form.end, value: endTime }
         })
     }
-
+    
     const formElementsArray = Object.keys(Form).map((key) => {
         return {
             id: key,
@@ -107,7 +109,7 @@ const NewQueue: React.FC<OwnProps> = (props) => {
     const footer = (
         <div style={{ display: 'flex' }}>
             <Button color="purple" onClick={() => updateDetails()}>שמור</Button>
-            <Button color="purple" onClick={() => updateDetails()}>בטל</Button>
+            <Button color="purple" onClick={() => props.close()}>בטל</Button>
         </div>
 
     )

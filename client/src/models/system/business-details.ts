@@ -10,11 +10,5 @@ export type BusinessDetails = {
     links: { [key: string]: string };
     logo?: string;
     domain: string;
-    hours?: BusinesHours,
-    schedule: Schedule
+    hours?: BusinesHours
 }
-
-
-export type Schedule = {
-    [weekNumber: number]: { [startHour: string]: Event }[]
-};

@@ -5,5 +5,4 @@ export const initialAuthState: BusinessState = {
   loading: false,
   details: null,
   hours: {} ,
-  schedule: {}
 };

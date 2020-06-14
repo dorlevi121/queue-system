@@ -1,12 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const queueSchema = new Schema(
+const eventSchema = new Schema(
   {
-    time: {
-      type: Date,
+    start: {
+      type: String,
       required: true,
     },
+
+    end: {
+      type: String,
+      required: true,
+    },
+
     serviceId: { type: Schema.Types.ObjectId, ref: "Service", required: true },
 
     employeeId: {
@@ -15,17 +21,29 @@ const queueSchema = new Schema(
       required: true,
     },
 
-    clientId: { type: Schema.Types.ObjectId, ref: "Client", required: true },
+    clientPhone: { type: Schema.Types.Phone , ref: "Client", required: true },
+
     isApprove: {
       type: Boolean,
       default: true,
     },
+    
     isPaid: {
       type: Boolean,
       default: true,
     },
+
+    title: {
+      type: String,
+      required: false
+    }, 
+
+    description: {
+      type: String,
+      required: false
+    }, 
   },
   { timestamps: true }
 );
 
-// module.exports = mongoose.model("Queue", queueSchema);
+ module.exports = mongoose.model("Event", eventSchema);

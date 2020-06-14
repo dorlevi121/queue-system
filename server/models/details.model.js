@@ -63,11 +63,6 @@ const SingletonBusinessSchema = (() => {
           type: Boolean,
           default: true
         },
-        schedule: {
-          type: Map,
-          require: false,
-          default: {},
-        },
         hours: {
           type: Map,
           require: false,

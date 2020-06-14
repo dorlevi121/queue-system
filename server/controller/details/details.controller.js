@@ -1,4 +1,3 @@
-const moment = require("moment");
 const initialHours = require('../../utils/system/hours');
 
 const { error422, error404, error403Admin, error401guest } = require("../../utils/error/dbErrorHandler");
@@ -68,26 +67,5 @@ exports.postBuisnessHours = async (req, res, next) => {
   }
 };
 
-exports.postBuisnessSchedule = async (req, res, next) => {
-  try {
-    // error422(req);
 
-    error403Admin(req);
-    const schedule = { ...req.body };
-
-    const Business = require("../../models/details.model")(req.mongo);
-
-    const buisness = await Business.findOne();
-    buisness.schedule = schedule;
-
-    await buisness.save();
-
-    res.status(200).json({
-      msg: "update buisness schedule",
-      schedule: buisness.schedule,
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
 

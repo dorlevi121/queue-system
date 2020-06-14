@@ -4,6 +4,9 @@ import API from "../../../models/axios/axios";
 import { serviceActionsEnum } from "../service/service.types";
 import { DetailsActionsEnum } from "../details/details.types";
 import { Employee } from "../../../models/system/employee";
+import { scheduleActionsEnum } from "../schedule/schedule.types";
+import moment from "moment";
+import { BusinessScheduleWeek } from "../../../models/system/event";
 
 export const setDomain = (domain: string) => {
   return (dispatch: any, getState: any) => {
@@ -53,7 +56,6 @@ export const registerEmployee = (employee: Employee) => {
 export const loginEmployee = (form: { phone: string; password: string }) => {
   return (dispatch: any, getState: any) => {
     dispatch({ type: AuthActionsEnum.START_AUTH });
-    console.log(form);
 
     API.post("business/auth/login", form)
       .then((res) => {
@@ -90,7 +92,13 @@ export const signInCheck = () => {
         const businessDeatails = res.data.business;
         const employee = res.data.employee;
         const services = res.data.services;
-
+        const schedule = res.data.schedule;
+        let scheduleWeek: BusinessScheduleWeek = [];
+        Object.keys(schedule).forEach((key) => {
+          if (schedule[key].weekNumber === parseInt(moment(new Date()).format('WW')))
+            scheduleWeek = schedule[key]
+        });
+          
         dispatch({
           type: AuthActionsEnum.SIGN_IN_CHECK,
           ans: true,
@@ -103,6 +111,10 @@ export const signInCheck = () => {
         dispatch({
           type: DetailsActionsEnum.SUCCESS_GET_DETAILS,
           details: businessDeatails,
+        });
+        dispatch({
+          type: scheduleActionsEnum.SUCCESS_GET_WEEK_SCHEDULE,
+          scheduleWeek: scheduleWeek ? scheduleWeek : new Array(7)
         });
         return;
       })
