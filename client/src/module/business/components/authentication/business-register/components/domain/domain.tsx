@@ -73,7 +73,6 @@ const Domain: React.FC<Props> = React.memo(props => {
     if (!props.loading && !props.error && nextPage && Error.length <= 1) {
         props.step('increment');
     }
-    console.log('domain', Form, Error);
 
     return (
         <React.Fragment>

@@ -6,11 +6,12 @@ interface OwnProps {
     title?: string,
     disabled: boolean,
     value?: string,
-    onChange: (e: any, arg?: any) => void,
+    onChange: (e: any, arg?: any, day?: string) => void,
     id?: string,
     style?: {},
     styleSelect?: {},
-    defaultValue?: any
+    defaultValue?: any,
+    day?: string
 }
 
 const Options: React.FC<OwnProps> = (props) => {
@@ -21,7 +22,7 @@ const Options: React.FC<OwnProps> = (props) => {
             }
             <select disabled={props.disabled} className={OptionsStyle.Select} style={props.styleSelect}
                 value={props.value} id={props.id}
-                onChange={(e) => props.onChange(e, props.id)}
+                onChange={(e) => props.onChange(e, props.id, props.day)}
             >
                 {props.defaultValue &&
                     <option value={props.title} hidden defaultValue={props.defaultValue}>{props.title}</option>

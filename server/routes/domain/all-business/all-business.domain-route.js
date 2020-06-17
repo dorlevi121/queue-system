@@ -5,9 +5,7 @@ const Business = require("../../../models/details.model");
 const Service = require("../../../models/service.model");
 
 
-router.get("/", isAuth("client"), async (req, res, next) => {
-  console.log('in');
-  
+router.get("/", isAuth("client"), async (req, res, next) => {  
   try {
     const business = await Business(req.mongo).findOne();
     const services = await Service(req.mongo).find();

@@ -15,14 +15,10 @@ export const setDomain = (domain: string) => {
     API.get("business/auth/check/" + domain)
       .then((res) => {
         localStorage.setItem("domain", domain);
-        console.log("domain sucsess");
-
         return dispatch({ type: AuthActionsEnum.SUCESS_DOMAIN });
       })
       .catch((error: any) => {
         const msg = error.response.data.message;
-        console.log(msg);
-
         return dispatch({
           type: AuthActionsEnum.FALID_AUTH,
           error: msg,
@@ -159,7 +155,6 @@ export const setNewPasswordEmployee = (
 
     API.post("business/auth/resetPassword/" + token, form)
       .then((res) => {
-        console.log(res.data.message);
         const token = res.data.token;
         const domain = res.data.domain;
         localStorage.setItem("token", token);

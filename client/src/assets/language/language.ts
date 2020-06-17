@@ -59,6 +59,10 @@ export const numberError = ["Add New Business", "שדה יכול להכיל מס
 // ** Buttons ** //
 export const next = ["Add New Business", "המשך"];
 export const back = ["Add New Business", "חזור"];
+export const save = ["Add New Business", "שמור"];
+export const remove = ["Add New Business", "מחק"];
+export const update = ["Add New Business", "עדכן"];
+
 
 // ** Login ** //
 export const loginTitle = ["Add New Business", "התחברות עובד"];

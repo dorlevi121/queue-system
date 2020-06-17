@@ -15,12 +15,10 @@ interface StateProps {
 
 // check if user authentocate - pass component else sign in
 type Props = DispatchProps & StateProps & RouteProps;
-const AdminRoute: React.SFC<Props> = ({ component: Component, ...rest }) => {
+const AdminRoute: React.SFC<Props> = ({ component: Component, ...rest }) => {    
     if (!Component) {
         return null;
-    }
-    console.log(rest.isAdmin);
-    
+    }    
     return (
         <Route
             {...rest}
@@ -28,13 +26,13 @@ const AdminRoute: React.SFC<Props> = ({ component: Component, ...rest }) => {
                 rest.isSignIn && rest.isAdmin ? (
                     <Component {...props} />
                 ) : (
-                        // <Redirect
-                        //     to={{
-                        //         pathname: "/signin",
-                        //         state: { from: props.location }
-                        //     }}
-                        // />
-                        <div style={{textAlign: 'center'}}>אין לך הרשאות מתאימות</div>
+                        <Redirect
+                            to={{
+                                pathname: "/business/login",
+                                state: { from: props.location }
+                            }}
+                        />
+                       // <div style={{textAlign: 'center'}}>אין לך הרשאות מתאימות</div>
                     )
             }
         />

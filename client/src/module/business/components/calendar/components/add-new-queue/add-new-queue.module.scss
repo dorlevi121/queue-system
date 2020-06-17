@@ -4,6 +4,13 @@
   & select {
     width: 300px;
   }
+
+  & .Buttons {
+    width: 300px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 

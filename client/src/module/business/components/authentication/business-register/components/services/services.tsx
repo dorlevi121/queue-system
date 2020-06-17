@@ -177,7 +177,6 @@ const Services: React.FC<Props> = (props) => {
       <div className={BusinessRegistrationStyle.Buttons}>
         <Button onClick={() => props.step("decrement")} color="orange"> {language.back[1]} </Button>
         <Button onClick={() => {
-          console.log(props.getAllServices());
 
         }} color="purple-register"> סיום </Button>
       </div>
@@ -199,7 +198,6 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(memo(Services,
   (prevProps, nextProps) => {
-    console.log('Services');
     if (!nextProps.loading && !nextProps.error && nextPage) {
       nextProps.step('increment');
       return true;

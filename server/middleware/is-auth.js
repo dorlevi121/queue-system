@@ -19,7 +19,6 @@ module.exports = (kind, mongoose = null) => {
     error401auth(token);
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decodedToken);
       
       error404(decodedToken);
       switch (kind) {

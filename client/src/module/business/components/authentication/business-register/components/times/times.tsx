@@ -249,7 +249,6 @@ export default connect<StateProps, DispatchProps>(
   mapDispatchToProps
 )(
   memo(Times, (prevProps, nextProps) => {
-    console.log("Times");
     if (!nextProps.loading && nextPage && Error.length <= 1) {
       nextProps.step("increment");
       return true;

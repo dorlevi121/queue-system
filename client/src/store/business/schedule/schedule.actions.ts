@@ -20,8 +20,6 @@ export const postScheduleWeek = (schedule: BusinessScheduleWeek, weekNumber: num
       })
       .catch((error: any) => {
         // const msg = error.response.data.message;
-        console.log(error);
-
         return dispatch({
           type: scheduleActionsEnum.FALID_SCHEDULE,
           error: error,
@@ -75,8 +73,6 @@ export const updateScheduleWeek = (scheduleWeek: BusinessScheduleWeek, weekNumbe
       })
       .catch((error: any) => {
         // const msg = error.response.data.message;
-        console.log(error);
-
         return dispatch({
           type: scheduleActionsEnum.FALID_SCHEDULE,
           error: error,
@@ -103,8 +99,6 @@ export const updateWeekNumber = (weekNumber: number) => {
       })
       .catch((error: any) => {
         // const msg = error.response.data.message;
-        console.log(error);
-
         return dispatch({
           type: scheduleActionsEnum.FALID_SCHEDULE,
           error: error,

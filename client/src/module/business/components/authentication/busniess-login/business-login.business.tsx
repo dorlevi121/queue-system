@@ -3,16 +3,17 @@ import BusinessLoginStyle from "./business-login.module.scss";
 import BusinessRegisterStyle from "../business-register/business-register.module.scss";
 import ManagerRegistrationStyle from "../business-register/components/manager-registration/manager-registration.module.scss";
 import { connect } from "react-redux";
-import { getLoading, getError } from "../../../../../store/business/auth/auth.selectors";
+import { getLoading, getError, getIsSignIn } from "../../../../../store/business/auth/auth.selectors";
 import Button from "../../../../../models/ui/button/button";
 import { loginEmployee } from "../../../../../store/business/auth/auth.actions";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import AuthenticationHeadrer from "../shared/authentication-header/authentication-headrer";
 import * as language from "../../../../../assets/language/language";
 import Input from "../../../../../models/ui/input/input";
 
 import { password, phone } from "../../../../../models/ui/input/utility/input-types.input";
 import { inputChanged } from "../../../../../models/ui/input/utility/update-Input.input";
+import Loading from "../../../../../models/ui/loading/loading";
 
 interface FormState {
   phone: string;
@@ -22,6 +23,7 @@ interface FormState {
 interface StateProps {
   loading: boolean;
   error: string;
+  isSignIn: boolean
 }
 
 interface DispatchProps {
@@ -38,7 +40,7 @@ const BusinessLogin: React.FC<Props> = (props) => {
 
   });
 
-  const [error, setError] = useState<string>("");
+  const [Error, setError] = useState<string>("");
 
   const onClickNext = () => {
     let ansForm = Object.assign(
@@ -55,8 +57,6 @@ const BusinessLogin: React.FC<Props> = (props) => {
 
     setForm(ans.updatedForm);
     setError("")
-    console.log(ans.formIsValid);
-    
     if (!ans.formIsValid) {
       const index = Object.keys(ans.updatedForm).
         filter(it => ans.updatedForm[it].error && ans.updatedForm[it].touched).pop();
@@ -72,6 +72,9 @@ const BusinessLogin: React.FC<Props> = (props) => {
     };
   });
 
+  if (props.isSignIn) {
+    return <Redirect to="/business" />
+  }
 
   return (
     <div className={BusinessRegisterStyle.Register}>
@@ -81,7 +84,7 @@ const BusinessLogin: React.FC<Props> = (props) => {
         <AuthenticationHeadrer
           title={language.loginTitle[1]}
           subTitle={language.loginSubTitle[1]}
-          error={error ? error : props.error}
+          error={Error ? Error : props.error}
         />
 
         <React.Fragment>
@@ -110,7 +113,7 @@ const BusinessLogin: React.FC<Props> = (props) => {
               </div>
             </React.Fragment>
           ) : (
-              <div>Loading...</div>
+              <Loading />
             )}
         </React.Fragment>
       </div>
@@ -121,6 +124,7 @@ const BusinessLogin: React.FC<Props> = (props) => {
 const mapStateToProps = (state: any) => ({
   loading: getLoading(state),
   error: getError(state),
+  isSignIn: getIsSignIn(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

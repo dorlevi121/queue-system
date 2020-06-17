@@ -3,7 +3,8 @@ import SwitchButtonStyle from './switch-button.module.scss';
 
 interface OwnProps {
     state: boolean,
-    onChange: (name: string, value: any) => void,
+    onChange: (name: string, value: any, day?: string) => void,
+    day?: string
 }
 
 const SwitchButton: React.FC<OwnProps> = (props) => {
@@ -11,7 +12,7 @@ const SwitchButton: React.FC<OwnProps> = (props) => {
 
     const Switch = () => {
         setState(!State);
-        props.onChange('available', !State)
+        props.onChange('available', !State, props.day)
     }
 
     return (

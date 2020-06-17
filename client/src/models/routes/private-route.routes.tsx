@@ -27,7 +27,7 @@ const PrivateRoute: React.SFC<Props> = ({ component: Component, ...rest }) => {
                 ) : (
                         <Redirect
                             to={{
-                                pathname: "/",
+                                pathname: "/business/login",
                                 state: { from: props.location }
                             }}
                         />

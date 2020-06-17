@@ -49,8 +49,6 @@ const ResetEmployeePassword: React.FC<Props> = (props) => {
       {},
       ...Object.keys(Form).map((k) => ({ [k]: Form[k].value }))
     );
-
-    console.log(ansForm);
     props.resetPasswordEmployee(ansForm.phone);
   };
 

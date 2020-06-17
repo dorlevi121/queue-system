@@ -75,6 +75,8 @@ const AddService: React.FC<OwnProps> = (props) => {
     };
 
     const addNewService = () => {
+        console.log(Error);
+        
         if (Error) return;
         const copyForm = cloneDeep(Form);
         copyForm['available'] = Available;

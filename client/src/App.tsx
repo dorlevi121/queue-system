@@ -5,29 +5,30 @@ import { BrowserRouter, Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 import MainUser from './module/business/core/main-user.user';
 import { signInCheck } from './store/business/auth/auth.actions';
-import { getIsSignIn } from './store/business/auth/auth.selectors';
+import { getIsSignIn, getLoading } from './store/business/auth/auth.selectors';
+import Loading from './models/ui/loading/loading';
 
+interface StateProps {
+  isSignIn: boolean;
+  loading: boolean
+}
 
 interface DispatchProps {
   signInCheck: typeof signInCheck
-}
-
-interface StateProps {
-  isSignIn: boolean
 }
 
 type Props = DispatchProps & StateProps;
 const App: React.FC<Props> = (props) => {
 
   useEffect(() => {
-    props.signInCheck(); 
+    props.signInCheck();
   }, []);
-  
 
+  if (props.loading) return <Loading />
   return (
     <BrowserRouter>
       {
-        //props.isSignIn && 
+        props.isSignIn && 
         <MainUser />
       }
       <Routing />
@@ -36,7 +37,8 @@ const App: React.FC<Props> = (props) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  isSignIn: getIsSignIn(state)
+  isSignIn: getIsSignIn(state),
+  loading: getLoading(state)
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

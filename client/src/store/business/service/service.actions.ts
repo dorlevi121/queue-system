@@ -30,7 +30,6 @@ export const getAllServices = () => {
 
     API.get("business/service")
       .then((res) => {
-        console.log(res.data);
         return dispatch({
           type: serviceActionsEnum.SUCCESS_GET_ALL_SERVICES,
           service: res.data.services,

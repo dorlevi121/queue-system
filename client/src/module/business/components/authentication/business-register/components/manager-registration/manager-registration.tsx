@@ -79,7 +79,6 @@ const ManagerRegistration: React.FC<Props> = (props) => {
   };
 
   const verificationPhone = (verificationCode: string) => {
-    console.log('verificationPhone', verificationCode);
     if (verificationCode === "123") {
       props.step('increment');
     }

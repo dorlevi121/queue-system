@@ -38,9 +38,7 @@ app.post("/", async (req, res, next) => {
     const databases = await mongoose.connections[0].db
       .admin()
       .listDatabases({ listDatabases: 1, nameOnly: true });
-    console.log(databases.databases);
     databases.databases.forEach(dbName => {
-      console.log(dbName.name);
       if (dbToNoRemove.indexOf(dbName.name) < 0)
 
         mongoose
@@ -57,9 +55,7 @@ app.post("/", async (req, res, next) => {
     })
     res.status(205).json({ message: "delete", databases: databases.databases });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: "admin error" });
-
   }
 });
 

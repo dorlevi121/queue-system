@@ -30,8 +30,6 @@ exports.mail = async (req, res, next) => {
 exports.employeeSmsResetPassword = async (req, res, next) => {
   try {
     const { phone: email } = req.body;
-    console.log(email);
-
     const domain = await Domain.findOne({ email: email });
     error404(domain);
 

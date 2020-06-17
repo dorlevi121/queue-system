@@ -29,7 +29,6 @@ type Props = DispatchProps & StateProps;
 const OpeningHours: React.FC<Props> = (props) => {
     const [IsMobile, setIsMobile] = useState<any>(false);
     const [Hours, setHours] = useState<BusinesHours>(props.hours)
-    const [CurDay, setCurDay] = useState<string>('sunday');
 
     // Component did mount
     useEffect(() => {
@@ -42,18 +41,20 @@ const OpeningHours: React.FC<Props> = (props) => {
         resize();
     }, [IsMobile]);
 
-    const onChangeHour = (e: any, arg: any) => {
+    const onChangeHour = (e: any, arg: any, day?: string) => {
+        if (!day) return;
         const hour = e.target.value;
         const time: "start" | "end" = arg;
-        const curHours: { start: string, end: string }[] = Hours[CurDay];
+        const curHours: { start: string, end: string }[] = Hours[day];
         curHours[0][time] = hour;
         setHours({
-            ...Hours, [CurDay]: curHours
+            ...Hours, [day]: curHours
         });
     }
 
-    const onClickAvailable = (name: string, value: boolean) => {
-        const curHours: { start: string, end: string }[] = Hours[CurDay];
+    const onClickAvailable = (name: string, value: boolean, day?: string) => {
+        if (!day) return;
+        const curHours: { start: string, end: string }[] = Hours[day];
         if (!value) {
             // if day[0] == {start: "00:00", end: "00:00"} meaning that day us unavailable
             curHours.unshift({ start: "00:00", end: "00:00" });
@@ -67,7 +68,7 @@ const OpeningHours: React.FC<Props> = (props) => {
             }
         }
         setHours({
-            ...Hours, [CurDay]: curHours
+            ...Hours, [day]: curHours
         });
     }
 
@@ -76,7 +77,7 @@ const OpeningHours: React.FC<Props> = (props) => {
     }
 
     let hebDays: string[] = IsMobile ? days.shortenedHebDays : days.FullHebDays;
-    
+
     return (
         <React.Fragment>
             <SettingsHeader title="שעות פתיחה" sunTitle="כאן תוכל לערוך את ימי ושעות פתיחת העסק שלך" />
@@ -96,17 +97,18 @@ const OpeningHours: React.FC<Props> = (props) => {
                         {hebDays.map((d: string, i: number) => {
                             const curEnglishDay = days.FullEngDays[i];
                             const isAvailable = Hours[curEnglishDay].length && Hours[curEnglishDay][0].start !== "00:00" ? true : false;
+                            // Define end hour by start time
                             const endHours = Hours[curEnglishDay].length ?
-                                hours.hours.slice(hours.hours.indexOf(Hours[curEnglishDay][0].start)) : hours.hours;
+                                hours.hours.slice(hours.hours.indexOf(Hours[curEnglishDay][0].start) + 1) : hours.hours;
                             return (
-                                <div key={d} className={HoursStyle.DayContent} onClick={() => setCurDay(curEnglishDay)}>
+                                <div key={d} className={HoursStyle.DayContent} >
                                     <p className={HoursStyle.Day} >{d}</p>
 
-                                    <SwitchButton state={isAvailable} onChange={onClickAvailable} />
-                                    <Options disabled={!isAvailable} options={hours.hours} title="פתיחה" styleSelect={{fontSize: '.8rem'}}
+                                    <SwitchButton state={isAvailable} onChange={onClickAvailable} day={curEnglishDay} />
+                                    <Options disabled={!isAvailable} options={hours.hours} title="פתיחה" styleSelect={{ fontSize: '.8rem' }} day={curEnglishDay}
                                         onChange={onChangeHour} id="start" value={Hours[curEnglishDay].length ? Hours[curEnglishDay][0].start : ""}
                                     />
-                                    <Options disabled={!isAvailable} options={endHours} title="סגירה" styleSelect={{fontSize: '.8rem'}}
+                                    <Options disabled={!isAvailable} options={endHours} title="סגירה" styleSelect={{ fontSize: '.8rem' }} day={curEnglishDay}
                                         onChange={onChangeHour} id="end" value={Hours[curEnglishDay].length ? Hours[curEnglishDay][0].end : ""}
                                     />
                                 </div>

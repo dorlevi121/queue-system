@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NewQueueStyle from './add-new-queue.module.scss';
 import Modal from '../../../../../../models/ui/modal/modal';
 import Button from '../../../../../../models/ui/button/button';
@@ -16,7 +16,8 @@ interface OwnProps {
     addNewEvent: (event: Event) => void;
     date: { date: string, hour: string },
     services: Service[],
-    curEvent: Event | undefined
+    curEvent?: Event,
+    deleteEvent: (event: Event | undefined) => void
 }
 
 const NewQueue: React.FC<OwnProps> = (props) => {
@@ -26,7 +27,7 @@ const NewQueue: React.FC<OwnProps> = (props) => {
                 type: "text",
                 placeholder: language.eventTitle[1],
             },
-            value: "",
+            value: props.curEvent?.title ? props.curEvent.title : "",
             label: language.eventTitle[1],
             validation: {
                 required: false,
@@ -38,24 +39,33 @@ const NewQueue: React.FC<OwnProps> = (props) => {
                 type: "text",
                 placeholder: language.description[1],
             },
-            value: "", label: language.description[1],
+            value: props.curEvent?.description ? props.curEvent.description : "", label: language.description[1],
             validation: {
                 required: false,
                 minLen: 2,
             }
         },
         clientPhone: {
-            ...phone, value: "", label: language.clientPhone[1]
+            ...phone, value: props.curEvent?.clientPhone ? props.curEvent.clientPhone : "", label: language.clientPhone[1]
         },
         start: {
-            ...plainText, value: props.date.hour, editable: false, label: "שעת התחלה"
+            ...plainText, value: props.curEvent ? props.curEvent.start : props.date.hour, editable: false, label: "שעת התחלה"
         },
         end: {
-            ...plainText, value: '', editable: false, label: "שעת סיום"
+            ...plainText, value: props.curEvent?.end ? props.curEvent.end : "", label: "שעת סיום"
         }
     });
     const [Service, setService] = useState<Service | undefined>(undefined);
     const [Error, setError] = useState<string>("");
+    const [CurEvent, setCurEvent] = useState(props.curEvent);
+
+    useEffect(() => {
+        if (props.curEvent) {
+            setCurEvent(props.curEvent);
+            const service = props.services.find(s => s._id === props.curEvent?.serviceId)
+            setService(service);
+        }
+    }, [props])
 
     const inputChangedHandler = (e: any, inputIdentifier: any) => {
         const ans = inputChanged(Form, e, inputIdentifier);
@@ -82,7 +92,6 @@ const NewQueue: React.FC<OwnProps> = (props) => {
                 }
                 return ({ [k]: copyForm[k].value })
             }))
-
         props.addNewEvent(ansForm);
         props.close();
     }
@@ -92,13 +101,13 @@ const NewQueue: React.FC<OwnProps> = (props) => {
     const onChangeService = (e: any) => {
         const service = props.services.find(s => s.title === e.target.value);
         // Calculate duration time of event
-        const endTime = moment(props.date.hour, "HH:mm").add(service?.duration, 'minute').format("HH:mm");
+        const endTime = moment(Form.start.value, "HH:mm").add(service?.duration, 'minute').format("HH:mm");
         setService(service);
         setForm({
             ...Form, end: { ...Form.end, value: endTime }
         })
     }
-    
+
     const formElementsArray = Object.keys(Form).map((key) => {
         return {
             id: key,
@@ -107,9 +116,12 @@ const NewQueue: React.FC<OwnProps> = (props) => {
     });
 
     const footer = (
-        <div style={{ display: 'flex' }}>
-            <Button color="purple" onClick={() => updateDetails()}>שמור</Button>
-            <Button color="purple" onClick={() => props.close()}>בטל</Button>
+        <div className={NewQueueStyle.Buttons}>
+            {props.curEvent &&
+                <Button color="orange" onClick={() => props.deleteEvent(CurEvent)}>{language.remove[1]}</Button>
+            }
+            <Button disabled={Error.length > 0 || !Service || !Form.clientPhone.value} color="purple" onClick={() => updateDetails()}>{props.curEvent ? language.update[1] : language.save[1]}</Button>
+
         </div>
 
     )

@@ -33,8 +33,6 @@ export const postDetails = (details: BusinessDetails) => {
         return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_DETAILS, details: res.data.updatdeDetail });
       })
       .catch((error: any) => {
-        console.log(error);
-
         const msg = error.response.data.message;
         return dispatch({
           type: DetailsActionsEnum.FALID_DETAILS,
@@ -53,8 +51,6 @@ export const postBuisnessHours = (hours: BusinesHours) => {
         return dispatch({ type: DetailsActionsEnum.SUCCESS_POST_HOURS, hours: res.data.hours });
       })
       .catch((error: any) => {
-        console.log(error);
-
         const msg = error.response.data.message;
         return dispatch({
           type: DetailsActionsEnum.FALID_DETAILS,
