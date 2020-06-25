@@ -20,3 +20,12 @@ exports.createToken = (employee) => {
     process.env.JWT_SECRET
   );
 };
+
+exports.createTokenClient = (client) => {
+  return jwt.sign(
+    {
+      clientId: client.phone.toString(),
+    },
+    process.env.JWT_SECRET
+  );
+};

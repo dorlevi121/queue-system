@@ -22,7 +22,7 @@ module.exports = (app, mongoose) => {
       next(error);
     }
   });
-  app.use("/:domain", require("./domain/index.domain-route"));
+  app.use("/:domain", require("./client/index.business-route"));
 
   require("../utils/error/index.error")(app);
 };

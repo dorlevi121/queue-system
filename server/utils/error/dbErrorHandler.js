@@ -2,6 +2,14 @@
 const { validationResult } = require("express-validator");
 const hebrewErrorValidator = require("../language/hebrew/hebrewErrorValidator");
 
+exports.isPhoneNumnerExist = (client) => {
+  if (isDomainExist === null) {
+    const error = new Error("מספר קיים במערכת");
+    error.statusCode = 422;
+    throw error;
+  }
+};
+
 exports.errorDomain401 = (isDomainExist) => {
   if (!isDomainExist) {
     const error = new Error(hebrewErrorValidator.wrongDomain401HebError);
@@ -9,6 +17,7 @@ exports.errorDomain401 = (isDomainExist) => {
     throw error;
   }
 };
+
 exports.error422 = (req) => {
   const errors = validationResult(req);
   // console.log(errors);

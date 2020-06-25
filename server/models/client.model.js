@@ -1,37 +1,54 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+module.exports = (mongo) => {
+  return mongo
+    .useDb(mongo.name)
+    .model("Client", SingletonClientSchema.getClientSchema(mongo));
+};
 
-const clientSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    maxlength: 32,
-  },
-  lastName: {
-    type: String,
+const SingletonClientSchema = (() => {
+  let clientSchema;
 
-    required: true,
-    maxlength: 32,
-  },
-  phone: {
-    type: String,
-    unique: true,
-    required: true,
-    maxlength: 11,
-  },
-  image: {
-    type: String,
-    default: "",
-  },
-  hashedPassword: {
-    type: String,
-    required: true,
-  },
-  reliability: {
-    type: Number,
-    default: 5,
-  },
-  remark: { type: String, default: "" },
-});
+  const createClientSchema = (mongo) => {
+    const Schema = mongo.base.Schema;
+    return new Schema(
+      {
+        name: {
+          type: String,
+          required: true,
+          maxlength: 32,
+        },
+        lastName: {
+          type: String,
+          required: true,
+          maxlength: 32,
+        },
+        phone: {
+          type: String,
+          unique: true,
+          required: true
+        },
+        image: {
+          type: String,
+          default: "",
+        },
+        events: {
+          type: Array,
+          of: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
+          required: true,
+          default: []
+        },
+        reliability: {
+          type: Number,
+          default: 5,
+        },
+      },
+      { timestamps: true }
+    );
+  };
 
-// module.exports = mongoose.model("Client", clientSchema);
+  return {
+    getClientSchema: (mongo) => {
+      if (!clientSchema) clientSchema = createClientSchema(mongo);
+      return clientSchema;
+    },
+  };
+})();

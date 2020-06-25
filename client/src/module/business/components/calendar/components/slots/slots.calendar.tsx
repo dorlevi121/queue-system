@@ -29,17 +29,15 @@ const Slots: React.FC<OwnProps> = React.memo(props => {
         for (let j = 0; j < 6; j++) {
             const hour = moment(i + ":" + j * 10, "HH:mm").format("HH:mm");
 
-            for (let day = 0; day < 6; day++) { // i represent a day
-                if (!props.eventsWeek[day]) continue; //O(1)
-                if (props.eventsWeek[day][hour]) { //O(1)
-                    isEvents[day] = props.eventsWeek[day][hour];
-                }
-                else if (isEvents[day]) {
-                    if (!moment(hour, 'HH:mm').isBefore(moment(isEvents[day].end, 'HH:mm'))) {
-                        delete isEvents[day];
-                    }
-                }
-            }
+            // for (let day = 0; day < 6; day++) { // i represent a day
+            //     if (!props.eventsWeek[day]) continue; //O(1)
+            //     if (props.eventsWeek[day][hour]) { //O(1)
+            //         isEvents[day] = props.eventsWeek[day][hour];
+            //     }
+            //     else if (isEvents[day] && !moment(hour, 'HH:mm').isBefore(moment(isEvents[day].end, 'HH:mm'))) {
+            //         delete isEvents[day];
+            //     }
+            // }
 
             slots.push((
                 <tr key={hour}>
@@ -47,7 +45,12 @@ const Slots: React.FC<OwnProps> = React.memo(props => {
                     {
                         allDaysWeek.map((day: any, r: number) => {
                             const hours = props.businessHours[FullEngDays[r]];
-
+                            if (props.eventsWeek[day][hour]) { //O(1)
+                                isEvents[day] = props.eventsWeek[day][hour];
+                            }
+                            else if (isEvents[day] && !moment(hour, 'HH:mm').isBefore(moment(isEvents[day].end, 'HH:mm'))) {
+                                delete isEvents[day];
+                            }
                             if ((hours[0] && ((moment(hour, 'HH:mm').isBefore(moment(hours[0].start, 'HH:mm'))) ||
                                 (moment(hours[0].end, 'HH:mm').isBefore(moment(hour, 'HH:mm')))) || hours.length < 1)) {
                                 return (

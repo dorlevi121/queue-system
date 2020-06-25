@@ -71,12 +71,10 @@ exports.employeeLogin = async (req, res, next) => {
 exports.check = async (req, res, next) => {
   // const domain =req.get("domain");
   const domain = req.params.domain;
- 
-    
+
   try {
     let ans = await require("../../../models/domain.model").find();
     ans = ans.every((e) => e.domain !== domain);
-
 
     errorDomain401(ans);
     res.status(200).json({ message: "Domain is free" });

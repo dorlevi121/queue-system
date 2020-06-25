@@ -16,7 +16,7 @@ class Home extends Component {
         return (
             <div className={homeStyle.Home}>
                 <div className={homeStyle.Chart}>
-                    <p>:מספר הלקוחות בשנה האחרונה</p>
+                    <p>מספר הלקוחות בשנה האחרונה:</p>
                     <div className={homeStyle.Graph}>
                         <ChartHome />
                     </div>
